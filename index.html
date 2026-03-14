@@ -1,1024 +1,1152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Falcon Informatics | Data Science Excellence</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --blue: #2563eb;
-            --blue-light: #3b82f6;
-            --blue-dark: #1d4ed8;
-            --gold: #f59e0b;
-            --slate: #0f172a;
-            --slate-mid: #1e293b;
-            --muted: #64748b;
-            --surface: #f8fafc;
-            --white: #ffffff;
-            --border: #e2e8f0;
-        }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: #fff;
-            color: var(--slate);
-            overflow-x: hidden;
-            padding-bottom: 110px;
-            cursor: none;
-        }
-
-        /* ── CUSTOM CURSOR ── */
-        #cursor { position: fixed; width: 10px; height: 10px; background: var(--blue); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.05s; }
-        #cursor-ring { position: fixed; width: 36px; height: 36px; border: 2px solid rgba(37,99,235,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: transform 0.12s ease, width 0.2s, height 0.2s; }
-        body:hover #cursor { opacity: 1; }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; width: 100%; z-index: 500;
-            background: rgba(255,255,255,0.88);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid var(--border);
-            padding: 0 48px;
-        }
-        .nav-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 68px; }
-        .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--slate); letter-spacing: -0.5px; }
-        .nav-logo span { color: var(--blue); }
-        .nav-links { display: flex; gap: 32px; }
-        .nav-link { font-size: 0.82rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.2s; letter-spacing: 0.02em; }
-        .nav-link:hover { color: var(--blue); }
-        .nav-cta { background: var(--blue); color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: background 0.2s, transform 0.15s; }
-        .nav-cta:hover { background: var(--blue-dark); transform: translateY(-1px); }
-
-        /* ── HERO ── */
-        .hero { padding: 140px 48px 100px; background: var(--surface); position: relative; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%); pointer-events: none; }
-        .hero-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
-        .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 100px; padding: 6px 16px; font-size: 0.78rem; font-weight: 600; color: var(--blue); margin-bottom: 28px; }
-        .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--blue); border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
-        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 800; line-height: 1.05; color: var(--slate); letter-spacing: -2px; margin-bottom: 20px; }
-        .hero h1 .typed-wrap { display: inline-block; color: var(--blue); min-width: 380px; position: relative; }
-        .typed-text { border-right: 3px solid var(--blue); padding-right: 4px; animation: blink 0.9s infinite; }
-        @keyframes blink { 50%{border-color:transparent} }
-        .hero p { font-size: 1.1rem; color: var(--muted); max-width: 580px; margin: 0 auto 40px; line-height: 1.75; }
-        .hero-btns { display: flex; gap: 14px; justify-content: center; }
-        .btn-primary { background: var(--blue); color: #fff; padding: 14px 32px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; border: none; cursor: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 24px rgba(37,99,235,0.35); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,99,235,0.45); }
-        .btn-outline { background: transparent; color: var(--slate); padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; border: 1.5px solid var(--border); cursor: none; transition: all 0.2s; }
-        .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
-
-        /* ── SECTION TITLES ── */
-        .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--blue); margin-bottom: 10px; }
-        .section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; color: var(--slate); letter-spacing: -1px; line-height: 1.15; }
-        .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; margin-top: 12px; }
-
-        /* ── BEFORE & AFTER SLIDER ── */
-        .slider-section { padding: 100px 48px; background: var(--slate); color: #fff; }
-        .slider-inner { max-width: 1100px; margin: 0 auto; }
-        .slider-header { text-align: center; margin-bottom: 60px; }
-        .slider-header .section-title { color: #fff; }
-        .slider-header .section-sub { color: rgba(255,255,255,0.55); }
-        .ba-container {
-            position: relative; width: 100%; max-width: 900px; margin: 0 auto;
-            border-radius: 20px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-            user-select: none;
-        }
-        .ba-table {
-            width: 100%; border-collapse: collapse;
-            font-size: 0.78rem; font-family: 'DM Mono', monospace;
-        }
-        .ba-table th { padding: 10px 16px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
-        .ba-table td { padding: 9px 16px; border-top: 1px solid rgba(255,255,255,0.06); }
-        .ba-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; }
-        .ba-right { width: 100%; }
-        .ba-left-inner { width: 900px; }
-        .left-panel { background: #1a0a0a; }
-        .left-panel th { background: #3b0f0f; color: #f87171; }
-        .left-panel td { color: #fca5a5; }
-        .left-panel .blur-cell { filter: blur(5px); opacity: 0.7; }
-        .right-panel { background: #061520; }
-        .right-panel th { background: #0c2a3a; color: #34d399; }
-        .right-panel td { color: #6ee7b7; }
-        .ba-divider {
-            position: absolute; top: 0; width: 3px; height: 100%;
-            background: linear-gradient(to bottom, var(--gold), var(--blue));
-            left: 50%; transform: translateX(-50%);
-            cursor: ew-resize; z-index: 10;
-        }
-        .ba-handle {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-            width: 44px; height: 44px; border-radius: 50%;
-            background: var(--gold); display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        .ba-handle svg { width: 20px; height: 20px; fill: #fff; }
-        .ba-labels { display: flex; justify-content: space-between; margin-top: 16px; }
-        .ba-label { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600; }
-        .ba-label .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-        /* ── INDUSTRY SWITCHER ── */
-        .industry-section { padding: 100px 48px; background: #fff; }
-        .industry-inner { max-width: 1200px; margin: 0 auto; }
-        .industry-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin: 40px 0 50px; }
-        .ind-tab {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 22px; border-radius: 12px;
-            border: 1.5px solid var(--border);
-            font-weight: 600; font-size: 0.85rem;
-            cursor: none; transition: all 0.2s;
-            background: #fff; color: var(--muted);
-        }
-        .ind-tab:hover { border-color: var(--blue); color: var(--blue); }
-        .ind-tab.active { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
-        .ind-tab .icon { font-size: 1.2rem; }
-        .industry-content { display: none; animation: fadeInUp 0.4s ease; }
-        .industry-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-        .industry-text h3 { font-family:'Space Grotesk',sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--slate); margin-bottom: 16px; letter-spacing: -0.5px; }
-        .industry-text p { color: var(--muted); line-height: 1.75; margin-bottom: 24px; }
-        .industry-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .stat-card { background: var(--surface); border-radius: 12px; padding: 16px 20px; border: 1px solid var(--border); }
-        .stat-card .num { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--blue); }
-        .stat-card .lbl { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-        .industry-visual { background: var(--surface); border-radius: 20px; padding: 32px; border: 1px solid var(--border); min-height: 320px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
-
-        /* ── HOW IT WORKS STEPPER ── */
-        .stepper-section { padding: 100px 48px; background: var(--surface); }
-        .stepper-inner { max-width: 1000px; margin: 0 auto; }
-        .stepper-header { text-align: center; margin-bottom: 70px; }
-        .steps-track { position: relative; }
-        .steps-line { position: absolute; top: 32px; left: 10%; width: 80%; height: 2px; background: var(--border); z-index: 0; }
-        .steps-progress { position: absolute; top: 32px; left: 10%; height: 2px; background: linear-gradient(to right, var(--blue), var(--blue-light)); z-index: 1; transition: width 0.6s ease; width: 0%; }
-        .steps-row { display: flex; justify-content: space-between; position: relative; z-index: 2; }
-        .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; cursor: none; }
-        .step-icon-wrap {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: #fff; border: 2px solid var(--border);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; transition: all 0.4s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        }
-        .step-item.active .step-icon-wrap { background: var(--blue); border-color: var(--blue); box-shadow: 0 6px 24px rgba(37,99,235,0.4); transform: scale(1.15); }
-        .step-item.done .step-icon-wrap { background: var(--blue); border-color: var(--blue); }
-        .step-label { margin-top: 16px; font-weight: 700; font-size: 0.85rem; color: var(--muted); text-align: center; transition: color 0.3s; }
-        .step-item.active .step-label { color: var(--blue); }
-        .step-item.done .step-label { color: var(--slate); }
-        .step-desc { font-size: 0.75rem; color: var(--muted); text-align: center; margin-top: 6px; max-width: 110px; line-height: 1.4; }
-        .step-detail { margin-top: 60px; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 40px; min-height: 180px; transition: all 0.4s; }
-        .step-detail h4 { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--slate); margin-bottom: 10px; }
-        .step-detail p { color: var(--muted); line-height: 1.7; }
-        .step-nav-btns { display: flex; gap: 12px; margin-top: 60px; justify-content: center; }
-
-        /* ── PRIVACY SCORE ── */
-        .privacy-section { padding: 100px 48px; background: var(--slate); color: #fff; }
-        .privacy-inner { max-width: 960px; margin: 0 auto; }
-        .privacy-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 60px; }
-        .privacy-top { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-        .privacy-header .section-title { color: #fff; }
-        .privacy-header .section-sub { color: rgba(255,255,255,0.5); }
-        .gauge-wrap { display: flex; flex-direction: column; align-items: center; }
-        .gauge-svg { width: 220px; height: 130px; overflow: visible; }
-        .gauge-track { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 16; stroke-linecap: round; }
-        .gauge-fill { fill: none; stroke-width: 16; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease, stroke 0.6s ease; }
-        .gauge-needle { transform-origin: 110px 110px; transition: transform 0.6s ease; }
-        .privacy-score-num { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 800; color: #fff; margin-top: 8px; }
-        .privacy-score-lbl { font-size: 0.85rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
-        .slider-row { margin-top: 40px; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px; }
-        .slider-label span:first-child { color: var(--gold); font-weight: 600; }
-        .slider-label span:last-child { color: #34d399; font-weight: 600; }
-        input[type=range].privacy-slider { width: 100%; appearance: none; height: 6px; border-radius: 3px; outline: none; cursor: none; }
-        input[type=range].privacy-slider::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); cursor: none; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-        .privacy-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 40px; }
-        .metric-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; }
-        .metric-card .m-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
-        .metric-card .m-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; }
-
-        /* ── PRODUCTS ── */
-        .products-section { padding: 100px 48px; background: #fff; }
-        .products-inner { max-width: 1280px; margin: 0 auto; }
-        .products-header { text-align: center; margin-bottom: 64px; }
-        .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .product-card {
-            background: #fff; border: 1.5px solid var(--border); border-radius: 20px; padding: 36px;
-            display: flex; flex-direction: column;
-            transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s;
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-        .product-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.08); border-color: var(--blue-light); }
-        .product-card.featured { border-color: var(--gold); background: linear-gradient(135deg, #fffbeb 0%, #fff 100%); }
-        .product-icon { width: 48px; height: 48px; background: rgba(37,99,235,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 20px; }
-        .product-card.featured .product-icon { background: rgba(245,158,11,0.12); }
-        .product-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--slate); margin-bottom: 10px; }
-        .product-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; flex-grow: 1; margin-bottom: 20px; }
-        .product-features { list-style: none; margin-bottom: 28px; }
-        .product-features li { font-size: 0.78rem; color: var(--muted); padding: 5px 0; display: flex; align-items: center; gap: 8px; }
-        .product-features li::before { content: ''; width: 5px; height: 5px; background: var(--blue); border-radius: 50%; flex-shrink: 0; }
-        .product-card.featured .product-features li::before { background: var(--gold); }
-        .product-btns { display: flex; gap: 10px; margin-top: auto; }
-        .btn-sm-primary { background: var(--blue); color: #fff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; border: none; cursor: none; transition: all 0.2s; }
-        .btn-sm-primary:hover { background: var(--blue-dark); }
-        .btn-sm-outline { background: transparent; color: var(--slate); padding: 9px 18px; border-radius: 8px; font-weight: 600; font-size: 0.8rem; border: 1.5px solid var(--border); cursor: none; transition: all 0.2s; }
-        .btn-sm-outline:hover { border-color: var(--blue); color: var(--blue); }
-        .featured-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 100px; margin-bottom: 10px; letter-spacing: 0.05em; }
-
-        /* ── PRICING ── */
-        .pricing-section { padding: 100px 48px; background: var(--surface); }
-        .pricing-inner { max-width: 900px; margin: 0 auto; text-align: center; }
-        .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 50px; }
-        .price-card { border-radius: 20px; padding: 44px; text-align: left; }
-        .price-card.free { background: #fff; border: 1.5px solid var(--border); }
-        .price-card.pro { background: var(--slate); color: #fff; }
-        .price-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
-        .price-card .price { font-family: 'Space Grotesk', sans-serif; font-size: 2.8rem; font-weight: 800; margin: 16px 0; }
-        .price-card .price span { font-size: 1rem; font-weight: 400; opacity: 0.6; }
-        .price-list { list-style: none; margin: 24px 0 32px; display: flex; flex-direction: column; gap: 10px; }
-        .price-list li { font-size: 0.85rem; display: flex; align-items: center; gap: 10px; }
-        .price-list li::before { content: '✓'; font-weight: 700; color: var(--blue); }
-        .price-card.pro .price-list li::before { color: #34d399; }
-        .price-card.free .price-list li.no::before { content: '✗'; color: #f87171; }
-        .btn-price { width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: none; transition: all 0.2s; border: none; }
-        .btn-price.free-btn { background: transparent; border: 1.5px solid var(--border); color: var(--slate); }
-        .btn-price.pro-btn { background: var(--blue); color: #fff; box-shadow: 0 4px 20px rgba(37,99,235,0.4); }
-        .btn-price.pro-btn:hover { background: var(--blue-dark); }
-
-        /* ── PARTNERS ── */
-        .partners-section { padding: 80px 48px; background: #fff; border-top: 1px solid var(--border); }
-        .partners-inner { max-width: 900px; margin: 0 auto; text-align: center; }
-        .partner-types { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin-top: 40px; }
-        .partner-type { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 16px; }
-        .partner-type .p-icon { font-size: 2rem; margin-bottom: 10px; }
-        .partner-type h5 { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--slate); }
-
-        /* ── FOOTER ── */
-        footer { background: var(--slate); color: #fff; padding: 80px 48px 40px; }
-        .footer-inner { max-width: 1280px; margin: 0 auto; }
-        .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 60px; padding-bottom: 60px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        .footer-brand { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.1rem; margin-bottom: 16px; }
-        .footer-brand span { color: var(--blue-light); }
-        .footer-desc { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.7; }
-        .footer-col h6 { font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
-        .footer-col a { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.65); text-decoration: none; margin-bottom: 8px; transition: color 0.2s; }
-        .footer-col a:hover { color: #fff; }
-        .footer-bottom { padding-top: 30px; display: flex; justify-content: space-between; font-size: 0.78rem; color: rgba(255,255,255,0.3); }
-
-        /* ── CHATBOT BAR ── */
-        .chatbot-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 820px; z-index: 600;
-            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255,255,255,0.6);
-            border-radius: 20px; padding: 16px 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.4);
-        }
-        .chat-input-row { display: flex; align-items: center; gap: 12px; background: #fff; border: 1.5px solid var(--border); border-radius: 100px; padding: 8px 8px 8px 20px; }
-        .chat-avatar { width: 34px; height: 34px; background: linear-gradient(135deg, var(--blue), #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .chat-avatar svg { width: 16px; height: 16px; fill: #fff; }
-        .chat-input-row input { flex-grow: 1; border: none; outline: none; font-size: 0.88rem; background: transparent; font-family: 'DM Sans', sans-serif; cursor: none; }
-        .chat-send { width: 36px; height: 36px; background: var(--blue); border-radius: 50%; border: none; cursor: none; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.15s; flex-shrink: 0; }
-        .chat-send:hover { background: var(--blue-dark); transform: scale(1.1); }
-        .chat-send svg { width: 15px; height: 15px; fill: #fff; }
-        .chat-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-        .chat-pill { background: rgba(248,250,252,0.9); border: 1px solid var(--border); color: var(--muted); font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 100px; cursor: none; transition: all 0.2s; white-space: nowrap; }
-        .chat-pill:hover { border-color: var(--blue); color: var(--blue); background: rgba(37,99,235,0.04); }
-
-        /* ── MAGNETIC BUTTON JS HELPER ── */
-        .magnetic { transition: transform 0.3s cubic-bezier(0.23,1,0.32,1); }
-
-        /* ── SCROLL REVEAL ── */
-        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Falcon Informatics | AI-Powered Data Science Platform</title>
+<meta name="description" content="Falcon Informatics — synthetic data, ML lifecycle management, NLP, and executive BI. Trusted by banks, hospitals, and energy firms.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#2563eb;--blue-light:#3b82f6;--blue-dark:#1d4ed8;--gold:#f59e0b;--green:#10b981;--slate:#0f172a;--slate-mid:#1e293b;--muted:#64748b;--surface:#f8fafc;--border:#e2e8f0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:var(--slate);overflow-x:hidden;padding-bottom:110px;cursor:none}
+#cursor{position:fixed;width:10px;height:10px;background:var(--blue);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cursor-ring{position:fixed;width:36px;height:36px;border:2px solid rgba(37,99,235,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
+nav{position:fixed;top:0;width:100%;z-index:500;background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 40px}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:66px}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:var(--slate);text-decoration:none}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:24px}
+.nav-link{font-size:.8rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-link:hover{color:var(--blue)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-book{font-size:.78rem;font-weight:600;color:var(--blue);text-decoration:none;border:1.5px solid var(--blue);padding:7px 15px;border-radius:8px;transition:all .2s}
+.nav-book:hover{background:var(--blue);color:#fff}
+.nav-cta{background:var(--blue);color:#fff;padding:8px 17px;border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--blue-dark)}
+.hero{padding:136px 48px 80px;background:var(--surface);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.07) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1000px;margin:0 auto;text-align:center}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:100px;padding:6px 16px;font-size:.78rem;font-weight:600;color:var(--blue);margin-bottom:28px}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--blue);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:800;line-height:1.06;color:var(--slate);letter-spacing:-2px;margin-bottom:20px}
+.typed-wrap{display:inline-block;color:var(--blue);min-width:320px}
+.typed-text{border-right:3px solid var(--blue);padding-right:3px;animation:blink .9s infinite}
+@keyframes blink{50%{border-color:transparent}}
+.hero p{font-size:1.05rem;color:var(--muted);max-width:560px;margin:0 auto 36px;line-height:1.75}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--blue);color:#fff;padding:13px 28px;border-radius:10px;font-weight:700;font-size:.88rem;border:none;cursor:none;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 24px rgba(37,99,235,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(37,99,235,.45)}
+.btn-outline{background:transparent;color:var(--slate);padding:13px 28px;border-radius:10px;font-weight:600;font-size:.88rem;border:1.5px solid var(--border);cursor:none;transition:all .2s}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-gold{background:var(--gold);color:#fff;padding:13px 28px;border-radius:10px;font-weight:700;font-size:.88rem;border:none;cursor:none;transition:all .2s;box-shadow:0 4px 18px rgba(245,158,11,.35)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,.45)}
+.trust-bar{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 48px}
+.trust-bar-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:center}
+.trust-bar-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.trust-logos{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}
+.trust-logo{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 18px;font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;color:var(--muted)}
+.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:10px}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:800;color:var(--slate);letter-spacing:-1px;line-height:1.15}
+.section-sub{color:var(--muted);font-size:.95rem;line-height:1.7;margin-top:12px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+.magnetic{transition:transform .3s cubic-bezier(.23,1,.32,1)}
+/* TESTIMONIALS */
+.testimonials-section{padding:90px 48px;background:var(--surface)}
+.testimonials-inner{max-width:1200px;margin:0 auto}
+.testimonials-header{text-align:center;margin-bottom:52px}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.testi-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:30px;position:relative;transition:all .3s;transform-style:preserve-3d}
+.testi-card:hover{border-color:var(--blue-light);box-shadow:0 12px 40px rgba(37,99,235,.08)}
+.testi-org-badge{position:absolute;top:22px;right:22px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:3px 9px;font-size:.68rem;font-weight:700;color:var(--muted)}
+.testi-stars{display:flex;gap:3px;margin-bottom:14px}
+.testi-stars span{color:var(--gold);font-size:.95rem}
+.testi-quote{font-size:.87rem;color:var(--slate-mid);line-height:1.7;margin-bottom:22px;font-style:italic}
+.testi-quote::before{content:'"';font-size:1.8rem;color:rgba(37,99,235,.15);font-family:'Syne',sans-serif;font-weight:800;line-height:0;vertical-align:-.4em;margin-right:4px}
+.testi-person{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.testi-name{font-weight:700;font-size:.83rem;color:var(--slate)}
+.testi-role{font-size:.72rem;color:var(--muted)}
+/* CASE STUDIES */
+.case-section{padding:90px 48px;background:#fff}
+.case-inner{max-width:1200px;margin:0 auto}
+.case-header{text-align:center;margin-bottom:52px}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.case-card{border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:all .3s;cursor:none;transform-style:preserve-3d}
+.case-card:hover{border-color:var(--blue-light);box-shadow:0 16px 48px rgba(37,99,235,.1)}
+.case-card-top{padding:26px}
+.case-industry{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px}
+.case-card-top h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate);margin-bottom:9px;line-height:1.3}
+.case-card-top p{font-size:.8rem;color:var(--muted);line-height:1.6}
+.case-card-bottom{background:var(--surface);border-top:1px solid var(--border);padding:18px 26px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.case-metric .c-num{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--blue)}
+.case-metric .c-lbl{font-size:.68rem;color:var(--muted)}
+/* LEADERSHIP */
+.leadership-section{padding:90px 48px;background:var(--surface)}
+.leadership-inner{max-width:1100px;margin:0 auto}
+.leadership-header{text-align:center;margin-bottom:52px}
+.leadership-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.leader-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:34px;display:grid;grid-template-columns:96px 1fr;gap:26px;align-items:start;transition:all .3s}
+.leader-card:hover{border-color:var(--blue-light);box-shadow:0 12px 36px rgba(37,99,235,.08);transform:translateY(-3px)}
+.leader-avatar{width:96px;height:96px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0}
+.leader-info h4{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--slate);margin-bottom:4px}
+.leader-title{font-size:.75rem;font-weight:600;color:var(--blue);margin-bottom:9px;text-transform:uppercase;letter-spacing:.05em}
+.leader-bio{font-size:.81rem;color:var(--muted);line-height:1.65;margin-bottom:14px}
+.leader-links{display:flex;gap:9px;flex-wrap:wrap}
+.leader-link{display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:.72rem;font-weight:600;color:var(--slate);text-decoration:none;transition:all .2s}
+.leader-link:hover{border-color:var(--blue);color:var(--blue)}
+.leader-insight{background:rgba(37,99,235,.04);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:11px 15px;font-size:.76rem;font-style:italic;color:var(--slate-mid);margin-top:12px;line-height:1.55}
+/* BEFORE/AFTER */
+.slider-section{padding:90px 48px;background:var(--slate);color:#fff}
+.slider-inner{max-width:1100px;margin:0 auto}
+.slider-header{text-align:center;margin-bottom:52px}
+.slider-header .section-title{color:#fff}
+.slider-header .section-sub{color:rgba(255,255,255,.55)}
+.ba-container{position:relative;width:100%;max-width:900px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 80px rgba(0,0,0,.5);user-select:none}
+.ba-table{width:100%;border-collapse:collapse;font-size:.76rem;font-family:'Courier New',monospace}
+.ba-table th{padding:10px 16px;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.ba-table td{padding:9px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.ba-left{position:absolute;top:0;left:0;width:50%;height:100%;overflow:hidden}
+.ba-right{width:100%}
+.ba-left-inner{width:900px}
+.left-panel{background:#1a0a0a}
+.left-panel th{background:#3b0f0f;color:#f87171}
+.left-panel td{color:#fca5a5}
+.left-panel .blur-cell{filter:blur(5px);opacity:.7}
+.right-panel{background:#061520}
+.right-panel th{background:#0c2a3a;color:#34d399}
+.right-panel td{color:#6ee7b7}
+.ba-divider{position:absolute;top:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--gold),var(--blue));left:50%;transform:translateX(-50%);cursor:ew-resize;z-index:10}
+.ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.ba-labels{display:flex;justify-content:space-between;margin-top:16px;max-width:900px;margin-left:auto;margin-right:auto}
+.ba-label{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600}
+.ba-label .dot{width:8px;height:8px;border-radius:50%}
+/* INDUSTRY */
+.industry-section{padding:90px 48px;background:#fff}
+.industry-inner{max-width:1200px;margin:0 auto}
+.industry-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:36px 0 44px}
+.ind-tab{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;border:1.5px solid var(--border);font-weight:600;font-size:.82rem;cursor:none;transition:all .2s;background:#fff;color:var(--muted)}
+.ind-tab:hover{border-color:var(--blue);color:var(--blue)}
+.ind-tab.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,.3)}
+.industry-content{display:none;animation:fadeInUp .4s ease}
+.industry-content.active{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.industry-text h3{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--slate);margin-bottom:13px;letter-spacing:-.5px}
+.industry-text p{color:var(--muted);line-height:1.75;margin-bottom:20px;font-size:.88rem}
+.industry-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat-card{background:var(--surface);border-radius:11px;padding:14px 17px;border:1px solid var(--border)}
+.stat-card .num{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--blue)}
+.stat-card .lbl{font-size:.72rem;color:var(--muted);margin-top:2px}
+.industry-visual{background:var(--surface);border-radius:18px;padding:30px;border:1px solid var(--border);min-height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+/* STEPPER */
+.stepper-section{padding:90px 48px;background:var(--surface)}
+.stepper-inner{max-width:1000px;margin:0 auto}
+.stepper-header{text-align:center;margin-bottom:60px}
+.steps-track{position:relative}
+.steps-line{position:absolute;top:32px;left:10%;width:80%;height:2px;background:var(--border);z-index:0}
+.steps-progress{position:absolute;top:32px;left:10%;height:2px;background:linear-gradient(to right,var(--blue),var(--blue-light));z-index:1;transition:width .6s ease;width:0%}
+.steps-row{display:flex;justify-content:space-between;position:relative;z-index:2}
+.step-item{flex:1;display:flex;flex-direction:column;align-items:center;cursor:none}
+.step-icon-wrap{width:64px;height:64px;border-radius:50%;background:#fff;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .4s;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.step-item.active .step-icon-wrap{background:var(--blue);border-color:var(--blue);box-shadow:0 6px 24px rgba(37,99,235,.4);transform:scale(1.15)}
+.step-item.done .step-icon-wrap{background:var(--blue);border-color:var(--blue)}
+.step-label{margin-top:13px;font-weight:700;font-size:.82rem;color:var(--muted);text-align:center;transition:color .3s}
+.step-item.active .step-label{color:var(--blue)}
+.step-item.done .step-label{color:var(--slate)}
+.step-desc{font-size:.7rem;color:var(--muted);text-align:center;margin-top:5px;max-width:110px;line-height:1.4}
+.step-detail{margin-top:48px;background:#fff;border:1px solid var(--border);border-radius:18px;padding:34px;min-height:150px;transition:all .4s}
+.step-detail h4{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--slate);margin-bottom:9px}
+.step-detail p{color:var(--muted);line-height:1.7;font-size:.88rem}
+.step-nav-btns{display:flex;gap:12px;margin-top:48px;justify-content:center}
+/* PRIVACY */
+.privacy-section{padding:90px 48px;background:var(--slate);color:#fff}
+.privacy-inner{max-width:960px;margin:0 auto}
+.privacy-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:52px}
+.privacy-top{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+.privacy-header .section-title{color:#fff}
+.privacy-header .section-sub{color:rgba(255,255,255,.5)}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center}
+.gauge-svg{width:220px;height:130px;overflow:visible}
+.gauge-track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:16;stroke-linecap:round}
+.gauge-fill{fill:none;stroke-width:16;stroke-linecap:round;transition:stroke-dashoffset .6s ease,stroke .6s ease}
+.privacy-score-num{font-family:'Syne',sans-serif;font-size:3.2rem;font-weight:800;color:#fff;margin-top:8px}
+.privacy-score-lbl{font-size:.8rem;color:rgba(255,255,255,.5);letter-spacing:.05em}
+.slider-row{margin-top:32px}
+.slider-label{display:flex;justify-content:space-between;font-size:.76rem;margin-bottom:9px}
+.slider-label span:first-child{color:var(--gold);font-weight:600}
+.slider-label span:last-child{color:#34d399;font-weight:600}
+input[type=range].privacy-slider{width:100%;appearance:none;height:6px;border-radius:3px;outline:none;cursor:none}
+input[type=range].privacy-slider::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:none;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.privacy-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin-top:32px}
+.metric-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:17px}
+.metric-card .m-label{font-size:.7rem;color:rgba(255,255,255,.5);margin-bottom:6px}
+.metric-card .m-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800}
+/* PRODUCTS */
+.products-section{padding:90px 48px;background:#fff}
+.products-inner{max-width:1280px;margin:0 auto}
+.products-header{text-align:center;margin-bottom:52px}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.product-card{background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:30px;display:flex;flex-direction:column;transition:transform .1s ease,box-shadow .3s ease,border-color .3s;transform-style:preserve-3d;will-change:transform}
+.product-card:hover{box-shadow:0 20px 56px rgba(0,0,0,.08);border-color:var(--blue-light)}
+.product-card.featured{border-color:var(--gold);background:linear-gradient(135deg,#fffbeb 0%,#fff 100%)}
+.product-icon{width:44px;height:44px;background:rgba(37,99,235,.08);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.product-card.featured .product-icon{background:rgba(245,158,11,.12)}
+.product-tagline{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:5px}
+.product-card.featured .product-tagline{color:var(--gold)}
+.product-card h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--slate);margin-bottom:3px}
+.product-subtitle{font-size:.75rem;font-weight:500;color:var(--muted);font-style:italic;margin-bottom:9px}
+.product-card p{font-size:.81rem;color:var(--muted);line-height:1.65;flex-grow:1;margin-bottom:16px}
+.product-features{list-style:none;margin-bottom:20px}
+.product-features li{font-size:.74rem;color:var(--muted);padding:3px 0;display:flex;align-items:center;gap:7px}
+.product-features li::before{content:'';width:5px;height:5px;background:var(--blue);border-radius:50%;flex-shrink:0}
+.product-card.featured .product-features li::before{background:var(--gold)}
+.product-btns{display:flex;gap:8px;margin-top:auto}
+.btn-sm-primary{background:var(--blue);color:#fff;padding:8px 15px;border-radius:8px;font-weight:700;font-size:.76rem;border:none;cursor:none;transition:all .2s}
+.btn-sm-primary:hover{background:var(--blue-dark)}
+.btn-sm-outline{background:transparent;color:var(--slate);padding:8px 15px;border-radius:8px;font-weight:600;font-size:.76rem;border:1.5px solid var(--border);cursor:none;transition:all .2s}
+.btn-sm-outline:hover{border-color:var(--blue);color:var(--blue)}
+.featured-badge{display:inline-block;background:var(--gold);color:#fff;font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:100px;margin-bottom:7px;letter-spacing:.05em}
+.product-walkthrough{margin-top:14px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px;display:flex;align-items:center;gap:9px;cursor:none;transition:all .2s}
+.product-walkthrough:hover{border-color:var(--blue);background:rgba(37,99,235,.04)}
+.pw-play{width:28px;height:28px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pw-play svg{width:9px;height:9px;fill:#fff;margin-left:2px}
+.pw-text{font-size:.72rem;font-weight:600;color:var(--slate)}
+.pw-duration{font-size:.65rem;color:var(--muted)}
+/* ROI */
+.roi-section{padding:90px 48px;background:var(--surface)}
+.roi-inner{max-width:900px;margin:0 auto}
+.roi-card{background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:48px}
+.roi-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:52px;align-items:start}
+.roi-inputs{display:flex;flex-direction:column;gap:22px}
+.roi-field label{display:block;font-size:.75rem;font-weight:600;color:var(--slate-mid);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+.roi-field input[type=range]{width:100%;appearance:none;height:5px;background:var(--border);border-radius:3px;outline:none;cursor:none;accent-color:var(--blue)}
+.roi-field input[type=range]::-webkit-slider-thumb{appearance:none;width:17px;height:17px;border-radius:50%;background:var(--blue);cursor:none;border:2px solid #fff;box-shadow:0 2px 8px rgba(37,99,235,.4)}
+.roi-field .range-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted);margin-top:4px}
+.roi-field .range-val{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;color:var(--blue);margin-top:4px}
+.roi-results{background:var(--slate);border-radius:16px;padding:30px;color:#fff}
+.roi-results h4{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:22px;color:rgba(255,255,255,.65)}
+.roi-result-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.roi-result-row:last-child{border-bottom:none}
+.roi-result-row .r-label{font-size:.77rem;color:rgba(255,255,255,.55)}
+.roi-result-row .r-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800}
+.roi-total{background:linear-gradient(135deg,var(--blue),#0ea5e9);border-radius:11px;padding:18px;text-align:center;margin-top:18px}
+.roi-total .t-label{font-size:.72rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em}
+.roi-total .t-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:#fff}
+/* COMPARE */
+.compare-section{padding:90px 48px;background:#fff}
+.compare-inner{max-width:1100px;margin:0 auto}
+.compare-header{text-align:center;margin-bottom:52px}
+.compare-table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--border)}
+.compare-table{width:100%;border-collapse:collapse;font-size:.83rem}
+.compare-table thead tr th{padding:16px 22px;text-align:left;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);background:var(--surface)}
+.compare-table thead th:first-child{color:var(--muted);width:250px}
+.compare-table thead th.falcon-col{background:rgba(37,99,235,.06);color:var(--blue);text-align:center}
+.compare-table tbody tr td{padding:13px 22px;border-bottom:1px solid var(--border);vertical-align:middle}
+.compare-table tbody tr td:first-child{font-weight:600;color:var(--slate-mid);font-size:.82rem}
+.compare-table tbody td.falcon-col{background:rgba(37,99,235,.03);text-align:center}
+.compare-table tbody tr:last-child td{border-bottom:none}
+.compare-table tfoot tr td{padding:18px 22px;background:var(--surface);border-top:1px solid var(--border)}
+.compare-table tfoot td.falcon-col{background:rgba(37,99,235,.06);text-align:center}
+.check-yes{color:var(--green);font-size:1rem;font-weight:700}
+.check-no{color:#f87171;font-size:.95rem}
+.check-partial{color:var(--gold);font-size:.78rem;font-weight:600}
+.compare-badge{display:inline-block;background:var(--blue);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.05em;margin-left:5px;vertical-align:middle}
+/* AUDIT */
+.audit-section{padding:90px 48px;background:linear-gradient(135deg,var(--slate) 0%,#0f2040 100%);color:#fff}
+.audit-inner{max-width:1100px;margin:0 auto}
+.audit-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.audit-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:38px}
+.audit-card .a-icon{font-size:2.3rem;margin-bottom:18px}
+.audit-card h3{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;margin-bottom:11px}
+.audit-card p{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:24px}
+.audit-steps{list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:9px}
+.audit-steps li{display:flex;align-items:flex-start;gap:11px;font-size:.81rem;color:rgba(255,255,255,.75)}
+.audit-steps li::before{content:attr(data-n);width:21px;height:21px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.btn-audit{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.86rem;border:none;cursor:none;transition:all .2s;box-shadow:0 4px 18px rgba(245,158,11,.35)}
+.btn-audit:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,.5)}
+.btn-sandbox{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.86rem;border:1.5px solid rgba(255,255,255,.3);cursor:none;transition:all .2s}
+.btn-sandbox:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
+/* BOOKING BAR */
+.booking-bar{background:var(--blue);padding:26px 48px}
+.booking-bar-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.booking-bar-text h4{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:3px}
+.booking-bar-text p{font-size:.81rem;color:rgba(255,255,255,.7)}
+.booking-bar-actions{display:flex;gap:11px;flex-shrink:0}
+.btn-book{background:#fff;color:var(--blue);padding:11px 22px;border-radius:10px;font-weight:700;font-size:.83rem;border:none;cursor:none;transition:all .2s;white-space:nowrap}
+.btn-book:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+.btn-chat{background:transparent;color:#fff;padding:11px 22px;border-radius:10px;font-weight:600;font-size:.83rem;border:1.5px solid rgba(255,255,255,.4);cursor:none;transition:all .2s;white-space:nowrap}
+.btn-chat:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.7)}
+/* PRICING */
+.pricing-section{padding:90px 48px;background:var(--surface)}
+.pricing-inner{max-width:880px;margin:0 auto;text-align:center}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
+.price-card{border-radius:20px;padding:38px;text-align:left}
+.price-card.free{background:#fff;border:1.5px solid var(--border)}
+.price-card.pro{background:var(--slate);color:#fff}
+.price-card h4{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;margin-bottom:5px}
+.price-card .price{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;margin:14px 0}
+.price-card .price span{font-size:.9rem;font-weight:400;opacity:.6}
+.price-list{list-style:none;margin:20px 0 26px;display:flex;flex-direction:column;gap:8px}
+.price-list li{font-size:.81rem;display:flex;align-items:center;gap:9px}
+.price-list li::before{content:'✓';font-weight:700;color:var(--blue);flex-shrink:0}
+.price-card.pro .price-list li::before{color:#34d399}
+.price-card.free .price-list li.no::before{content:'✗';color:#f87171}
+.btn-price{width:100%;padding:13px;border-radius:11px;font-weight:700;font-size:.86rem;cursor:none;transition:all .2s;border:none}
+.btn-price.free-btn{background:transparent;border:1.5px solid var(--border);color:var(--slate)}
+.btn-price.pro-btn{background:var(--blue);color:#fff;box-shadow:0 4px 18px rgba(37,99,235,.4)}
+.btn-price.pro-btn:hover{background:var(--blue-dark)}
+/* PARTNERS */
+.partners-section{padding:78px 48px;background:#fff;border-top:1px solid var(--border)}
+.partners-inner{max-width:880px;margin:0 auto;text-align:center}
+.partner-types{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:38px}
+.partner-type{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 13px}
+.partner-type .p-icon{font-size:1.7rem;margin-bottom:9px}
+.partner-type h5{font-family:'Syne',sans-serif;font-size:.83rem;font-weight:700;color:var(--slate)}
+/* FOOTER */
+footer{background:var(--slate);color:#fff;padding:68px 48px 34px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:52px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:13px}
+.footer-brand span{color:var(--blue-light)}
+.footer-desc{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.7}
+.footer-col h6{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:14px}
+.footer-col a{display:block;font-size:.8rem;color:rgba(255,255,255,.6);text-decoration:none;margin-bottom:7px;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{padding-top:26px;display:flex;justify-content:space-between;font-size:.73rem;color:rgba(255,255,255,.3)}
+/* CHATBOT */
+.chatbot-bar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:92%;max-width:820px;z-index:600;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.6);border-radius:18px;padding:13px 17px;box-shadow:0 20px 56px rgba(0,0,0,.12)}
+.chat-input-row{display:flex;align-items:center;gap:11px;background:#fff;border:1.5px solid var(--border);border-radius:100px;padding:7px 7px 7px 17px}
+.chat-avatar{width:31px;height:31px;background:linear-gradient(135deg,var(--blue),#06b6d4);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-avatar svg{width:13px;height:13px;fill:#fff}
+.chat-input-row input{flex-grow:1;border:none;outline:none;font-size:.83rem;background:transparent;font-family:'DM Sans',sans-serif;cursor:none}
+.chat-send{width:32px;height:32px;background:var(--blue);border-radius:50%;border:none;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.chat-send:hover{background:var(--blue-dark);transform:scale(1.1)}
+.chat-send svg{width:12px;height:12px;fill:#fff}
+.chat-pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.chat-pill{background:rgba(248,250,252,.9);border:1px solid var(--border);color:var(--muted);font-size:.7rem;font-weight:600;padding:5px 12px;border-radius:100px;cursor:none;transition:all .2s;white-space:nowrap}
+.chat-pill:hover{border-color:var(--blue);color:var(--blue)}
+</style>
 </head>
 <body>
-
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
-<!-- ── NAV ── -->
+<!-- NAV -->
 <nav>
-    <div class="nav-inner">
-        <div class="nav-logo">Falcon <span>Informatics</span></div>
-        <div class="nav-links">
-            <a href="#products" class="nav-link">Products</a>
-            <a href="#industries" class="nav-link">Industries</a>
-            <a href="#howitworks" class="nav-link">How It Works</a>
-            <a href="#privacy" class="nav-link">Privacy</a>
-            <a href="#pricing" class="nav-link">Pricing</a>
-            <a href="#partners" class="nav-link">Partners</a>
-        </div>
-        <a href="#" class="nav-cta magnetic">Request Demo</a>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Falcon <span>Informatics</span></a>
+    <div class="nav-links">
+      <a href="#products" class="nav-link">Products</a>
+      <a href="#industries" class="nav-link">Industries</a>
+      <a href="#case-studies" class="nav-link">Case Studies</a>
+      <a href="#compare" class="nav-link">Why Falcon</a>
+      <a href="#roi" class="nav-link">ROI Calculator</a>
+      <a href="#pricing" class="nav-link">Pricing</a>
     </div>
+    <div class="nav-right">
+      <a href="#booking" class="nav-book magnetic">📅 Book 15-min Call</a>
+      <a href="#audit" class="nav-cta magnetic">Free Data Audit</a>
+    </div>
+  </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- HERO -->
 <section class="hero">
-    <div class="hero-inner">
-        <div class="hero-tag">AI-Powered Data Science Platform</div>
-        <h1>
-            Unlock the Power of<br>
-            <span class="typed-wrap"><span class="typed-text" id="typed"></span></span>
-        </h1>
-        <p>Turning raw information into actionable intelligence — fueling smarter decisions, faster growth, and meaningful transformation.</p>
-        <div class="hero-btns">
-            <button class="btn-primary magnetic">Explore Products</button>
-            <button class="btn-outline magnetic">Watch Demo</button>
-        </div>
+  <div class="hero-inner">
+    <div class="hero-tag">AI-Powered Data Science Platform · Est. 2023</div>
+    <h1>Unlock the Power of<br><span class="typed-wrap"><span class="typed-text" id="typed"></span></span></h1>
+    <p>Turning raw information into actionable intelligence — fueling smarter decisions, faster growth, and meaningful transformation across Banking, Healthcare, and Energy.</p>
+    <div class="hero-btns">
+      <button class="btn-primary magnetic" onclick="document.getElementById('audit').scrollIntoView({behavior:'smooth'})">🔬 Get Free Data Audit</button>
+      <button class="btn-gold magnetic" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">📅 Book Discovery Call</button>
+      <button class="btn-outline magnetic" onclick="document.getElementById('sandbox').scrollIntoView({behavior:'smooth'})">Try Free Sandbox →</button>
     </div>
+  </div>
 </section>
 
-<!-- ── BEFORE & AFTER SLIDER ── -->
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <span class="trust-bar-label">Trusted by</span>
+    <div class="trust-logos">
+      <div class="trust-logo">🏦 AlMajal Bank</div>
+      <div class="trust-logo">🏥 NorthCare Health</div>
+      <div class="trust-logo">⚡ Gulf Energy Co.</div>
+      <div class="trust-logo">🛒 MarketPeak Retail</div>
+      <div class="trust-logo">📡 ConnectTel Group</div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="testimonials-header reveal">
+      <div class="section-label">Client Voices</div>
+      <div class="section-title">What Our Clients Actually Say</div>
+      <p class="section-sub">Real outcomes, real people — not marketing copy.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testi-card reveal">
+        <div class="testi-org-badge">🏦 Banking</div>
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Husool let us train our fraud detection model on realistic transaction data without touching a single real customer record. We went from concept to production in 6 weeks — something that would have taken months of legal approvals before.</p>
+        <div class="testi-person">
+          <div class="testi-avatar" style="background:rgba(37,99,235,.12);color:var(--blue)">AK</div>
+          <div><div class="testi-name">Ahmad K.</div><div class="testi-role">Chief Data Officer, AlMajal Bank</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-org-badge">🏥 Healthcare</div>
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">We needed patient data for our diagnostic AI — HIPAA compliance was a nightmare. Falcon built us a synthetic EHR dataset in 3 days that passed our clinical team's review. The fidelity was incredible. I was genuinely shocked.</p>
+        <div class="testi-person">
+          <div class="testi-avatar" style="background:rgba(16,185,129,.12);color:#059669">DR</div>
+          <div><div class="testi-name">Dr. Rania M.</div><div class="testi-role">Head of AI Research, NorthCare Health</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-org-badge">⚡ Energy</div>
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Manar's executive dashboards replaced four different BI tools we were paying for. Our C-suite now makes decisions from one screen. The ROI estimate they ran during the demo predicted $2.3M savings — we're already at $1.8M in year one.</p>
+        <div class="testi-person">
+          <div class="testi-avatar" style="background:rgba(245,158,11,.12);color:var(--gold)">SH</div>
+          <div><div class="testi-name">Sultan H.</div><div class="testi-role">VP Operations, Gulf Energy Co.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="case-section" id="case-studies">
+  <div class="case-inner">
+    <div class="case-header reveal">
+      <div class="section-label">Case Studies</div>
+      <div class="section-title">Real Problems. Real Numbers.</div>
+      <p class="section-sub">We don't say "we helped a bank." We show you exactly how much, how fast, and how.</p>
+    </div>
+    <div class="case-grid">
+      <div class="case-card reveal">
+        <div class="case-card-top" style="background:linear-gradient(135deg,#eff6ff,#fff)">
+          <div class="case-industry" style="color:var(--blue)">🏦 Tier-1 Regional Bank</div>
+          <h4>How We Reduced Fraud by 25% in 6 Months Using UmLama + Husool</h4>
+          <p>The bank's fraud team was blocked from training models on real transactions. Falcon deployed Husool to generate 4M synthetic transactions, enabling a new model that caught 1-in-4 additional fraud cases.</p>
+        </div>
+        <div class="case-card-bottom">
+          <div class="case-metric"><div class="c-num">25%</div><div class="c-lbl">Fraud Reduction</div></div>
+          <div class="case-metric"><div class="c-num">6mo</div><div class="c-lbl">Time to Impact</div></div>
+          <div class="case-metric"><div class="c-num">$4.2M</div><div class="c-lbl">Annual Savings</div></div>
+        </div>
+      </div>
+      <div class="case-card reveal reveal-delay-1">
+        <div class="case-card-top" style="background:linear-gradient(135deg,#ecfdf5,#fff)">
+          <div class="case-industry" style="color:#059669">🏥 Hospital Network (3 Facilities)</div>
+          <h4>Training a Diagnostic AI on Synthetic EHRs — Zero HIPAA Risk</h4>
+          <p>NorthCare needed a sepsis prediction model but couldn't use real patient data. Falcon generated 50,000 synthetic ICU records in 48 hours. The model achieved 91% accuracy, now deployed across all facilities.</p>
+        </div>
+        <div class="case-card-bottom">
+          <div class="case-metric"><div class="c-num">91%</div><div class="c-lbl">Model Accuracy</div></div>
+          <div class="case-metric"><div class="c-num">48h</div><div class="c-lbl">Data Ready</div></div>
+          <div class="case-metric"><div class="c-num">0</div><div class="c-lbl">HIPAA Violations</div></div>
+        </div>
+      </div>
+      <div class="case-card reveal reveal-delay-2">
+        <div class="case-card-top" style="background:linear-gradient(135deg,#fffbeb,#fff)">
+          <div class="case-industry" style="color:var(--gold)">⚡ National Energy Provider</div>
+          <h4>Predicting Pipeline Failures 14 Days Early with Jusafer + Manar</h4>
+          <p>Gulf Energy had 18+ unplanned shutdowns/year at $200K each. Falcon's real-time streaming detected anomalies 14 days before failure. In year one: zero unplanned shutdowns.</p>
+        </div>
+        <div class="case-card-bottom">
+          <div class="case-metric"><div class="c-num">0</div><div class="c-lbl">Shutdowns Yr 1</div></div>
+          <div class="case-metric"><div class="c-num">14-day</div><div class="c-lbl">Early Warning</div></div>
+          <div class="case-metric"><div class="c-num">$3.6M</div><div class="c-lbl">Cost Averted</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section class="leadership-section" id="leadership">
+  <div class="leadership-inner">
+    <div class="leadership-header reveal">
+      <div class="section-label">Our Team</div>
+      <div class="section-title">Built by Experts. Led by Visionaries.</div>
+      <p class="section-sub">In B2B tech, people buy from people they trust. Meet the founders.</p>
+    </div>
+    <div class="leadership-grid">
+      <div class="leader-card reveal">
+        <div class="leader-avatar" style="background:rgba(37,99,235,.08)">👨‍💻</div>
+        <div class="leader-info">
+          <h4>Zabiullah Khan</h4>
+          <div class="leader-title">Co-Founder & CEO</div>
+          <p class="leader-bio">15+ years in enterprise data architecture and AI strategy. Former Head of Analytics at a Fortune 500 energy firm. Published researcher in synthetic data generation and privacy-preserving ML.</p>
+          <div class="leader-links">
+            <a href="#" class="leader-link">🔗 LinkedIn</a>
+            <a href="#" class="leader-link">📝 Articles</a>
+            <a href="#" class="leader-link">▶ Talk</a>
+          </div>
+          <div class="leader-insight">"The next 10 years of AI will be won or lost on data quality — not model complexity. We built Falcon to solve that at its root."</div>
+        </div>
+      </div>
+      <div class="leader-card reveal reveal-delay-1">
+        <div class="leader-avatar" style="background:rgba(16,185,129,.08)">👨‍🔬</div>
+        <div class="leader-info">
+          <h4>Raju Kumar Allam</h4>
+          <div class="leader-title">Co-Founder & CTO</div>
+          <p class="leader-bio">PhD in Machine Learning from IIT Delhi. 12+ years building scalable data platforms for banking and healthcare. Core contributor to open-source privacy frameworks used by 40,000+ developers globally.</p>
+          <div class="leader-links">
+            <a href="#" class="leader-link">🔗 LinkedIn</a>
+            <a href="#" class="leader-link">📚 Research</a>
+            <a href="#" class="leader-link">💻 GitHub</a>
+          </div>
+          <div class="leader-insight">"Differential privacy isn't a feature we bolt on — it's the architectural foundation every product is built on, from day one."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE/AFTER SLIDER -->
 <section class="slider-section" id="husool">
-    <div class="slider-inner">
-        <div class="slider-header reveal">
-            <div class="section-label" style="color:rgba(255,255,255,0.5)">Husool — Synthetic Data</div>
-            <div class="section-title">Real Data → Synthetic Data</div>
-            <p class="section-sub">Drag the slider to see how Husool preserves statistical structure while eliminating sensitive identities.</p>
-        </div>
-
-        <div class="ba-container" id="ba-container">
-            <!-- RIGHT PANEL (base layer, always full width) -->
-            <div class="ba-right right-panel" style="padding:0">
-                <table class="ba-table">
-                    <thead><tr>
-                        <th>Patient ID</th><th>Name</th><th>DOB</th><th>Diagnosis</th><th>Balance</th><th>Phone</th>
-                    </tr></thead>
-                    <tbody>
-                        <tr><td>SYN-9841</td><td>Morgan Lee</td><td>1988-04-12</td><td>Type II Diabetes</td><td>$4,280</td><td>555-0192</td></tr>
-                        <tr><td>SYN-2275</td><td>Jordan Rivera</td><td>1975-09-03</td><td>Hypertension</td><td>$1,950</td><td>555-0347</td></tr>
-                        <tr><td>SYN-6603</td><td>Casey Brown</td><td>1992-01-28</td><td>Asthma</td><td>$7,110</td><td>555-0581</td></tr>
-                        <tr><td>SYN-1187</td><td>Alex Park</td><td>1961-07-15</td><td>Arthritis</td><td>$3,440</td><td>555-0765</td></tr>
-                        <tr><td>SYN-4492</td><td>Taylor Kim</td><td>1983-11-22</td><td>GERD</td><td>$2,880</td><td>555-0924</td></tr>
-                        <tr><td>SYN-7734</td><td>Drew Chen</td><td>1997-06-08</td><td>Migraine</td><td>$5,620</td><td>555-0138</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- LEFT PANEL (clipped overlay) -->
-            <div class="ba-left left-panel" id="ba-left">
-                <div class="ba-left-inner">
-                    <table class="ba-table">
-                        <thead><tr>
-                            <th>Patient ID</th><th>Name</th><th>DOB</th><th>Diagnosis</th><th>Balance</th><th>Phone</th>
-                        </tr></thead>
-                        <tbody>
-                            <tr><td>PT-00123</td><td class="blur-cell">James Harrington</td><td class="blur-cell">1982-03-14</td><td>Type II Diabetes</td><td class="blur-cell">$4,280</td><td class="blur-cell">+1-802-555-0147</td></tr>
-                            <tr><td>PT-00456</td><td class="blur-cell">Susan O'Malley</td><td class="blur-cell">1971-08-29</td><td>Hypertension</td><td class="blur-cell">$1,950</td><td class="blur-cell">+1-917-555-0391</td></tr>
-                            <tr><td>PT-00789</td><td class="blur-cell">Marcus Delgado</td><td class="blur-cell">1990-12-05</td><td>Asthma</td><td class="blur-cell">$7,110</td><td class="blur-cell">+1-310-555-0552</td></tr>
-                            <tr><td>PT-01012</td><td class="blur-cell">Linda Nakamura</td><td class="blur-cell">1959-04-17</td><td>Arthritis</td><td class="blur-cell">$3,440</td><td class="blur-cell">+1-646-555-0740</td></tr>
-                            <tr><td>PT-01345</td><td class="blur-cell">Robert Patel</td><td class="blur-cell">1978-10-31</td><td>GERD</td><td class="blur-cell">$2,880</td><td class="blur-cell">+1-415-555-0893</td></tr>
-                            <tr><td>PT-01678</td><td class="blur-cell">Amanda Wu</td><td class="blur-cell">1995-07-20</td><td>Migraine</td><td class="blur-cell">$5,620</td><td class="blur-cell">+1-312-555-0127</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- DIVIDER -->
-            <div class="ba-divider" id="ba-divider">
-                <div class="ba-handle">
-                    <svg viewBox="0 0 24 24"><path d="M8 5l-7 7 7 7M16 5l7 7-7 7"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="ba-labels" style="max-width:900px;margin:16px auto 0">
-            <div class="ba-label"><div class="dot" style="background:#f87171"></div><span style="color:#f87171">Sensitive Real Data</span></div>
-            <div class="ba-label"><span style="color:#34d399">Husool Synthetic Data</span><div class="dot" style="background:#34d399"></div></div>
-        </div>
+  <div class="slider-inner">
+    <div class="slider-header reveal">
+      <div class="section-label" style="color:rgba(255,255,255,.5)">Husool | Privacy-Safe Synthetic Data Generator</div>
+      <div class="section-title">Understand It in 2 Seconds</div>
+      <p class="section-sub">Drag the slider — watch Husool eliminate sensitive identities while preserving every statistical pattern your AI needs.</p>
     </div>
+    <div class="ba-container" id="ba-container">
+      <div class="ba-right right-panel" style="padding:0">
+        <table class="ba-table">
+          <thead><tr><th>Patient ID</th><th>Name</th><th>DOB</th><th>Diagnosis</th><th>Balance</th><th>Phone</th></tr></thead>
+          <tbody>
+            <tr><td>SYN-9841</td><td>Morgan Lee</td><td>1988-04-12</td><td>Type II Diabetes</td><td>$4,280</td><td>555-0192</td></tr>
+            <tr><td>SYN-2275</td><td>Jordan Rivera</td><td>1975-09-03</td><td>Hypertension</td><td>$1,950</td><td>555-0347</td></tr>
+            <tr><td>SYN-6603</td><td>Casey Brown</td><td>1992-01-28</td><td>Asthma</td><td>$7,110</td><td>555-0581</td></tr>
+            <tr><td>SYN-1187</td><td>Alex Park</td><td>1961-07-15</td><td>Arthritis</td><td>$3,440</td><td>555-0765</td></tr>
+            <tr><td>SYN-4492</td><td>Taylor Kim</td><td>1983-11-22</td><td>GERD</td><td>$2,880</td><td>555-0924</td></tr>
+            <tr><td>SYN-7734</td><td>Drew Chen</td><td>1997-06-08</td><td>Migraine</td><td>$5,620</td><td>555-0138</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ba-left left-panel" id="ba-left">
+        <div class="ba-left-inner">
+          <table class="ba-table">
+            <thead><tr><th>Patient ID</th><th>Name</th><th>DOB</th><th>Diagnosis</th><th>Balance</th><th>Phone</th></tr></thead>
+            <tbody>
+              <tr><td>PT-00123</td><td class="blur-cell">James Harrington</td><td class="blur-cell">1982-03-14</td><td>Type II Diabetes</td><td class="blur-cell">$4,280</td><td class="blur-cell">+1-802-555-0147</td></tr>
+              <tr><td>PT-00456</td><td class="blur-cell">Susan O'Malley</td><td class="blur-cell">1971-08-29</td><td>Hypertension</td><td class="blur-cell">$1,950</td><td class="blur-cell">+1-917-555-0391</td></tr>
+              <tr><td>PT-00789</td><td class="blur-cell">Marcus Delgado</td><td class="blur-cell">1990-12-05</td><td>Asthma</td><td class="blur-cell">$7,110</td><td class="blur-cell">+1-310-555-0552</td></tr>
+              <tr><td>PT-01012</td><td class="blur-cell">Linda Nakamura</td><td class="blur-cell">1959-04-17</td><td>Arthritis</td><td class="blur-cell">$3,440</td><td class="blur-cell">+1-646-555-0740</td></tr>
+              <tr><td>PT-01345</td><td class="blur-cell">Robert Patel</td><td class="blur-cell">1978-10-31</td><td>GERD</td><td class="blur-cell">$2,880</td><td class="blur-cell">+1-415-555-0893</td></tr>
+              <tr><td>PT-01678</td><td class="blur-cell">Amanda Wu</td><td class="blur-cell">1995-07-20</td><td>Migraine</td><td class="blur-cell">$5,620</td><td class="blur-cell">+1-312-555-0127</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ba-divider" id="ba-divider">
+        <div class="ba-handle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M8 5l-7 7 7 7M16 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="ba-labels" style="max-width:900px;margin-top:14px;margin-left:auto;margin-right:auto;display:flex;justify-content:space-between">
+      <div class="ba-label"><div class="dot" style="background:#f87171"></div><span style="color:#f87171">Real PII — Never Leaves Your Firewall</span></div>
+      <div class="ba-label"><span style="color:#34d399">Husool Synthetic — Safe to Share & Train On</span><div class="dot" style="background:#34d399"></div></div>
+    </div>
+  </div>
 </section>
 
-<!-- ── INDUSTRY SWITCHER ── -->
+<!-- INDUSTRY SWITCHER -->
 <section class="industry-section" id="industries">
-    <div class="industry-inner">
-        <div class="reveal">
-            <div class="section-label">Industries</div>
-            <div class="section-title">Built for Your Sector</div>
-            <p class="section-sub">Click your industry to see exactly how Falcon Informatics solves your challenges.</p>
-        </div>
-
-        <div class="industry-tabs">
-            <button class="ind-tab active" data-ind="banking"><span class="icon">🏦</span> Finance & Banking</button>
-            <button class="ind-tab" data-ind="healthcare"><span class="icon">🏥</span> Healthcare</button>
-            <button class="ind-tab" data-ind="energy"><span class="icon">⚡</span> Energy & Oil</button>
-            <button class="ind-tab" data-ind="ecommerce"><span class="icon">🛒</span> E-Commerce</button>
-            <button class="ind-tab" data-ind="telecom"><span class="icon">📡</span> Telecom</button>
-            <button class="ind-tab" data-ind="manufacturing"><span class="icon">🏭</span> Manufacturing</button>
-        </div>
-
-        <div id="ind-banking" class="industry-content active">
-            <div class="industry-text">
-                <h3>Smarter Banking,<br>Safer Data</h3>
-                <p>Falcon's synthetic data engine generates fully GDPR-compliant banking datasets — enabling AI model training without exposing real customer financial records. Detect fraud patterns faster with Husool's realistic transaction simulations.</p>
-                <div class="industry-stats">
-                    <div class="stat-card"><div class="num">99.8%</div><div class="lbl">Privacy Compliance Rate</div></div>
-                    <div class="stat-card"><div class="num">4.2×</div><div class="lbl">Faster Model Training</div></div>
-                    <div class="stat-card"><div class="num">$0</div><div class="lbl">PII Exposure Risk</div></div>
-                    <div class="stat-card"><div class="num">300+</div><div class="lbl">Banking Schemas Ready</div></div>
-                </div>
-            </div>
-            <div class="industry-visual">
-                <div style="font-size:3rem">🏦</div>
-                <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--slate);text-align:center">Fraud Detection Pipeline</div>
-                <div style="display:flex;gap:10px;margin-top:10px">
-                    <div style="background:rgba(37,99,235,0.08);border-radius:8px;padding:10px 14px;font-size:0.75rem;font-weight:600;color:var(--blue)">Transactions</div>
-                    <div style="display:flex;align-items:center;color:var(--muted)">→</div>
-                    <div style="background:rgba(37,99,235,0.08);border-radius:8px;padding:10px 14px;font-size:0.75rem;font-weight:600;color:var(--blue)">Husool Synth</div>
-                    <div style="display:flex;align-items:center;color:var(--muted)">→</div>
-                    <div style="background:rgba(16,185,129,0.1);border-radius:8px;padding:10px 14px;font-size:0.75rem;font-weight:600;color:#059669">ML Model</div>
-                </div>
-                <div style="margin-top:16px;font-size:0.8rem;color:var(--muted);text-align:center">Zero real PII leaves your firewall</div>
-            </div>
-        </div>
-
-        <div id="ind-healthcare" class="industry-content">
-            <div class="industry-text">
-                <h3>Clinical AI without<br>Patient Risk</h3>
-                <p>Train diagnostic models on synthetic EHR data that mirrors clinical reality — without exposing a single real patient record. Accelerate drug discovery and clinical trial readiness with statistically validated synthetic cohorts.</p>
-                <div class="industry-stats">
-                    <div class="stat-card"><div class="num">HIPAA</div><div class="lbl">Full Compliance Built-in</div></div>
-                    <div class="stat-card"><div class="num">10M+</div><div class="lbl">Synthetic Patient Records</div></div>
-                    <div class="stat-card"><div class="num">97%</div><div class="lbl">Statistical Fidelity</div></div>
-                    <div class="stat-card"><div class="num">60%</div><div class="lbl">Faster Trial Readiness</div></div>
-                </div>
-            </div>
-            <div class="industry-visual">
-                <div style="font-size:3rem">🧬</div>
-                <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--slate);text-align:center">Synthetic EHR Generation</div>
-                <div style="width:90%;background:var(--border);border-radius:4px;height:8px;margin-top:16px;overflow:hidden"><div style="width:97%;height:100%;background:linear-gradient(90deg,var(--blue),#06b6d4);border-radius:4px"></div></div>
-                <div style="font-size:0.75rem;color:var(--muted)">97% Statistical Fidelity Achieved</div>
-            </div>
-        </div>
-
-        <div id="ind-energy" class="industry-content">
-            <div class="industry-text">
-                <h3>Predictive Intelligence<br>for Energy Assets</h3>
-                <p>Monitor pipeline integrity, predict equipment failure, and optimize energy output using real-time streaming analytics from Jusafer. Generate synthetic sensor data for AI training without compromising operational data security.</p>
-                <div class="industry-stats">
-                    <div class="stat-card"><div class="num">40%</div><div class="lbl">Downtime Reduction</div></div>
-                    <div class="stat-card"><div class="num">Real-time</div><div class="lbl">Pipeline Monitoring</div></div>
-                    <div class="stat-card"><div class="num">ISO 27001</div><div class="lbl">Security Certified</div></div>
-                    <div class="stat-card"><div class="num">5TB/s</div><div class="lbl">Data Throughput</div></div>
-                </div>
-            </div>
-            <div class="industry-visual">
-                <div style="font-size:3rem">⚡</div>
-                <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--slate);text-align:center">Real-time Anomaly Detection</div>
-                <div style="font-size:0.8rem;color:var(--muted);text-align:center;margin-top:8px">Predictive maintenance on live sensor streams</div>
-            </div>
-        </div>
-
-        <div id="ind-ecommerce" class="industry-content">
-            <div class="industry-text">
-                <h3>Personalization at<br>Massive Scale</h3>
-                <p>Build recommendation engines and demand forecasting models using synthetic customer behavior data. Test A/B scenarios without exposing real shopper profiles — launch AI features 10× faster.</p>
-                <div class="industry-stats">
-                    <div class="stat-card"><div class="num">32%</div><div class="lbl">Avg Revenue Uplift</div></div>
-                    <div class="stat-card"><div class="num">10×</div><div class="lbl">Faster A/B Testing</div></div>
-                    <div class="stat-card"><div class="num">GDPR</div><div class="lbl">Compliant by Default</div></div>
-                    <div class="stat-card"><div class="num">500+</div><div class="lbl">Behavior Patterns</div></div>
-                </div>
-            </div>
-            <div class="industry-visual">
-                <div style="font-size:3rem">🛒</div>
-                <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--slate);text-align:center">Recommendation Engine</div>
-                <div style="font-size:0.8rem;color:var(--muted);text-align:center;margin-top:8px">Trained on 100% synthetic shopper profiles</div>
-            </div>
-        </div>
-
-        <div id="ind-telecom" class="industry-content">
-            <div class="industry-text">
-                <h3>Network Intelligence<br>& Churn Prevention</h3>
-                <p>Predict churn 30 days before it happens. Synthesize network usage patterns for AI model testing. Optimize spectrum allocation using Manar's real-time decision support for telecom executives.</p>
-                <div class="industry-stats">
-                    <div class="stat-card"><div class="num">30-day</div><div class="lbl">Churn Prediction Window</div></div>
-                    <div class="stat-card"><div class="num">85%</div><div class="lbl">Prediction Accuracy</div></div>
-                    <div class="stat-card"><div class="num">$12M</div><div class="lbl">Avg Annual Savings</div></div>
-                    <div class="stat-card"><div class="num">24/7</div><div class="lbl">Network Monitoring</div></div>
-                </div>
-            </div>
-            <div class="industry-visual">
-                <div style="font-size:3rem">📡</div>
-                <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--slate);text-align:center">Churn Risk Dashboard</div>
-                <div style="font-size:0.8rem;color:var(--muted);text-align:center;margin-top:8px">Real-time executive KPI monitoring</div>
-            </div>
-        </div>
-
-        <div id="ind-manufacturing" class="industry-content">
-            <div class="industry-text">
-                <h3>Smart Factory,<br>Zero Defects</h3>
-                <p>Synthesize edge-case manufacturing defect data to train quality control AI models. Predict machine failure before it happens. Cut quality inspection costs while increasing throughput accuracy.</p>
-                <div class="industry-stats">
-                    <div class="stat-card"><div class="num">99.4%</div><div class="lbl">Defect Detection Rate</div></div>
-                    <div class="stat-card"><div class="num">60%</div><div class="lbl">Inspection Cost Cut</div></div>
-                    <div class="stat-card"><div class="num">IoT</div><div class="lbl">Sensor Integration</div></div>
-                    <div class="stat-card"><div class="num">2hr</div><div class="lbl">Avg Setup Time</div></div>
-                </div>
-            </div>
-            <div class="industry-visual">
-                <div style="font-size:3rem">🏭</div>
-                <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--slate);text-align:center">Quality Control AI</div>
-                <div style="font-size:0.8rem;color:var(--muted);text-align:center;margin-top:8px">Defect detection trained on synthetic edge cases</div>
-            </div>
-        </div>
+  <div class="industry-inner">
+    <div class="reveal">
+      <div class="section-label">Industries</div>
+      <div class="section-title">Built Specifically for Your Sector</div>
+      <p class="section-sub">Click your industry — see exactly how Falcon solves your specific challenges.</p>
     </div>
+    <div class="industry-tabs">
+      <button class="ind-tab active" data-ind="banking"><span>🏦</span> Finance & Banking</button>
+      <button class="ind-tab" data-ind="healthcare"><span>🏥</span> Healthcare</button>
+      <button class="ind-tab" data-ind="energy"><span>⚡</span> Energy & Oil</button>
+      <button class="ind-tab" data-ind="ecommerce"><span>🛒</span> E-Commerce</button>
+      <button class="ind-tab" data-ind="telecom"><span>📡</span> Telecom</button>
+      <button class="ind-tab" data-ind="manufacturing"><span>🏭</span> Manufacturing</button>
+    </div>
+    <div id="ind-banking" class="industry-content active">
+      <div class="industry-text"><h3>Smarter Banking,<br>Safer Data</h3><p>Falcon's synthetic data engine generates fully GDPR-compliant banking datasets — enabling AI model training without exposing real customer financial records. Detect fraud patterns faster with Husool's realistic transaction simulations.</p><div class="industry-stats"><div class="stat-card"><div class="num">99.8%</div><div class="lbl">Privacy Compliance</div></div><div class="stat-card"><div class="num">4.2×</div><div class="lbl">Faster Training</div></div><div class="stat-card"><div class="num">$0</div><div class="lbl">PII Exposure Risk</div></div><div class="stat-card"><div class="num">300+</div><div class="lbl">Banking Schemas</div></div></div></div>
+      <div class="industry-visual"><div style="font-size:2.8rem">🏦</div><div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate)">Fraud Detection Pipeline</div><div style="display:flex;gap:9px;margin-top:10px;flex-wrap:wrap;justify-content:center"><div style="background:rgba(37,99,235,.08);border-radius:7px;padding:8px 13px;font-size:.72rem;font-weight:600;color:var(--blue)">Transactions</div><div style="display:flex;align-items:center;color:var(--muted)">→</div><div style="background:rgba(37,99,235,.08);border-radius:7px;padding:8px 13px;font-size:.72rem;font-weight:600;color:var(--blue)">Husool Synth</div><div style="display:flex;align-items:center;color:var(--muted)">→</div><div style="background:rgba(16,185,129,.1);border-radius:7px;padding:8px 13px;font-size:.72rem;font-weight:600;color:#059669">ML Model</div></div><div style="margin-top:12px;font-size:.76rem;color:var(--muted);text-align:center">Zero real PII leaves your firewall</div></div>
+    </div>
+    <div id="ind-healthcare" class="industry-content">
+      <div class="industry-text"><h3>Clinical AI without Patient Risk</h3><p>Train diagnostic models on synthetic EHR data that mirrors clinical reality — without exposing a single real patient record. Accelerate drug discovery with statistically validated synthetic cohorts.</p><div class="industry-stats"><div class="stat-card"><div class="num">HIPAA</div><div class="lbl">Compliance Built-in</div></div><div class="stat-card"><div class="num">10M+</div><div class="lbl">Synthetic Records</div></div><div class="stat-card"><div class="num">97%</div><div class="lbl">Statistical Fidelity</div></div><div class="stat-card"><div class="num">60%</div><div class="lbl">Faster Trial Readiness</div></div></div></div>
+      <div class="industry-visual"><div style="font-size:2.8rem">🧬</div><div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate)">Synthetic EHR Generation</div><div style="width:88%;background:var(--border);border-radius:4px;height:7px;margin-top:14px;overflow:hidden"><div style="width:97%;height:100%;background:linear-gradient(90deg,var(--blue),#06b6d4);border-radius:4px"></div></div><div style="font-size:.73rem;color:var(--muted)">97% Statistical Fidelity</div></div>
+    </div>
+    <div id="ind-energy" class="industry-content">
+      <div class="industry-text"><h3>Predictive Intelligence for Energy Assets</h3><p>Monitor pipeline integrity, predict equipment failure, and optimize output using real-time streaming analytics. 14-day early warning on equipment failure.</p><div class="industry-stats"><div class="stat-card"><div class="num">40%</div><div class="lbl">Downtime Reduction</div></div><div class="stat-card"><div class="num">Real-time</div><div class="lbl">Pipeline Monitor</div></div><div class="stat-card"><div class="num">ISO 27001</div><div class="lbl">Certified</div></div><div class="stat-card"><div class="num">5TB/s</div><div class="lbl">Throughput</div></div></div></div>
+      <div class="industry-visual"><div style="font-size:2.8rem">⚡</div><div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate)">Anomaly Detection</div><div style="font-size:.76rem;color:var(--muted);text-align:center;margin-top:8px">14-day early warning on equipment failure</div></div>
+    </div>
+    <div id="ind-ecommerce" class="industry-content">
+      <div class="industry-text"><h3>Personalization at Massive Scale</h3><p>Build recommendation engines and demand forecasting models using synthetic customer behavior data. Launch AI features 10× faster.</p><div class="industry-stats"><div class="stat-card"><div class="num">32%</div><div class="lbl">Revenue Uplift</div></div><div class="stat-card"><div class="num">10×</div><div class="lbl">Faster A/B Testing</div></div><div class="stat-card"><div class="num">GDPR</div><div class="lbl">By Default</div></div><div class="stat-card"><div class="num">500+</div><div class="lbl">Behavior Patterns</div></div></div></div>
+      <div class="industry-visual"><div style="font-size:2.8rem">🛒</div><div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate)">Recommendation Engine</div><div style="font-size:.76rem;color:var(--muted);margin-top:8px">Trained on 100% synthetic shopper profiles</div></div>
+    </div>
+    <div id="ind-telecom" class="industry-content">
+      <div class="industry-text"><h3>Network Intelligence & Churn Prevention</h3><p>Predict churn 30 days before it happens. Synthesize network usage patterns. Optimize spectrum allocation with executive dashboards.</p><div class="industry-stats"><div class="stat-card"><div class="num">30-day</div><div class="lbl">Churn Prediction</div></div><div class="stat-card"><div class="num">85%</div><div class="lbl">Accuracy</div></div><div class="stat-card"><div class="num">$12M</div><div class="lbl">Avg Annual Savings</div></div><div class="stat-card"><div class="num">24/7</div><div class="lbl">Monitoring</div></div></div></div>
+      <div class="industry-visual"><div style="font-size:2.8rem">📡</div><div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate)">Churn Risk Dashboard</div><div style="font-size:.76rem;color:var(--muted);margin-top:8px">Real-time executive KPI monitoring</div></div>
+    </div>
+    <div id="ind-manufacturing" class="industry-content">
+      <div class="industry-text"><h3>Smart Factory, Zero Defects</h3><p>Synthesize edge-case defect data to train quality control AI. Predict machine failure before it happens. Cut inspection costs by 60%.</p><div class="industry-stats"><div class="stat-card"><div class="num">99.4%</div><div class="lbl">Defect Detection</div></div><div class="stat-card"><div class="num">60%</div><div class="lbl">Inspection Cost Cut</div></div><div class="stat-card"><div class="num">IoT</div><div class="lbl">Sensor Integration</div></div><div class="stat-card"><div class="num">2hr</div><div class="lbl">Setup Time</div></div></div></div>
+      <div class="industry-visual"><div style="font-size:2.8rem">🏭</div><div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate)">Quality Control AI</div><div style="font-size:.76rem;color:var(--muted);margin-top:8px">Defect detection on synthetic edge cases</div></div>
+    </div>
+  </div>
 </section>
 
-<!-- ── HOW IT WORKS STEPPER ── -->
+<!-- HOW IT WORKS -->
 <section class="stepper-section" id="howitworks">
-    <div class="stepper-inner">
-        <div class="stepper-header reveal">
-            <div class="section-label">Process</div>
-            <div class="section-title">How Falcon Works</div>
-            <p class="section-sub">From raw data to intelligent outcomes — four precise steps.</p>
-        </div>
-
-        <div class="steps-track">
-            <div class="steps-line"></div>
-            <div class="steps-progress" id="steps-progress"></div>
-            <div class="steps-row">
-                <div class="step-item active" data-step="0">
-                    <div class="step-icon-wrap">🔗</div>
-                    <div class="step-label">Connect</div>
-                    <div class="step-desc">Link your data sources</div>
-                </div>
-                <div class="step-item" data-step="1">
-                    <div class="step-icon-wrap">🔍</div>
-                    <div class="step-label">Analyze</div>
-                    <div class="step-desc">AI maps your schema</div>
-                </div>
-                <div class="step-item" data-step="2">
-                    <div class="step-icon-wrap">🧪</div>
-                    <div class="step-label">Synthesize</div>
-                    <div class="step-desc">Generate private data</div>
-                </div>
-                <div class="step-item" data-step="3">
-                    <div class="step-icon-wrap">🚀</div>
-                    <div class="step-label">Deploy</div>
-                    <div class="step-desc">Ship AI to production</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="step-detail" id="step-detail">
-            <h4 id="step-detail-title">Step 1: Connect</h4>
-            <p id="step-detail-body">Integrate any data source in minutes — SQL databases, cloud storage, REST APIs, or flat files. Falcon's universal connectors speak every data dialect. Your data never leaves your infrastructure.</p>
-        </div>
-
-        <div class="step-nav-btns">
-            <button class="btn-outline magnetic" id="step-prev" onclick="changeStep(-1)">← Previous</button>
-            <button class="btn-primary magnetic" id="step-next" onclick="changeStep(1)">Next Step →</button>
-        </div>
+  <div class="stepper-inner">
+    <div class="stepper-header reveal">
+      <div class="section-label">Process</div>
+      <div class="section-title">From Raw Data to ROI in 4 Steps</div>
+      <p class="section-sub">Complex technology, made simple. Click each step to explore.</p>
     </div>
+    <div class="steps-track">
+      <div class="steps-line"></div>
+      <div class="steps-progress" id="steps-progress"></div>
+      <div class="steps-row">
+        <div class="step-item active" data-step="0"><div class="step-icon-wrap">🔗</div><div class="step-label">Connect</div><div class="step-desc">Link your sources</div></div>
+        <div class="step-item" data-step="1"><div class="step-icon-wrap">🔍</div><div class="step-label">Analyze</div><div class="step-desc">AI maps your schema</div></div>
+        <div class="step-item" data-step="2"><div class="step-icon-wrap">🧪</div><div class="step-label">Synthesize</div><div class="step-desc">Generate safe data</div></div>
+        <div class="step-item" data-step="3"><div class="step-icon-wrap">🚀</div><div class="step-label">Deploy</div><div class="step-desc">Ship AI to production</div></div>
+      </div>
+    </div>
+    <div class="step-detail" id="step-detail">
+      <h4 id="step-detail-title">Step 1: Connect</h4>
+      <p id="step-detail-body">Integrate any data source in minutes — SQL databases, cloud storage, REST APIs, or flat files. Falcon's universal connectors support 80+ data dialects. Your data never leaves your infrastructure.</p>
+    </div>
+    <div class="step-nav-btns">
+      <button class="btn-outline magnetic" id="step-prev" onclick="changeStep(-1)">← Previous</button>
+      <button class="btn-primary magnetic" id="step-next" onclick="changeStep(1)">Next Step →</button>
+    </div>
+  </div>
 </section>
 
-<!-- ── PRIVACY SCORE DASHBOARD ── -->
+<!-- PRIVACY SCORE -->
 <section class="privacy-section" id="privacy">
-    <div class="privacy-inner">
-        <div class="privacy-card reveal">
-            <div class="privacy-top">
-                <div class="privacy-header">
-                    <div class="section-label" style="color:rgba(255,255,255,0.4)">Husool Dashboard</div>
-                    <div class="section-title">Your Data,<br>Your Risk Level</div>
-                    <p class="section-sub" style="margin-top:16px">Move the slider to find your ideal balance between data utility and privacy protection. See your Privacy Score update in real-time.</p>
-                    <div class="slider-row" style="margin-top:32px">
-                        <div class="slider-label">
-                            <span>⚡ High Utility</span>
-                            <span>🔒 High Privacy</span>
-                        </div>
-                        <input type="range" class="privacy-slider" id="privacy-slider" min="0" max="100" value="50" style="background: linear-gradient(to right, #f59e0b 50%, #34d399 50%)">
-                    </div>
-                </div>
-                <div class="gauge-wrap">
-                    <svg class="gauge-svg" viewBox="0 0 220 130">
-                        <path class="gauge-track" d="M 20 110 A 90 90 0 0 1 200 110" />
-                        <path class="gauge-fill" id="gauge-fill" d="M 20 110 A 90 90 0 0 1 200 110"
-                            stroke-dasharray="283" stroke-dashoffset="141" stroke="#f59e0b"/>
-                        <line id="gauge-needle" x1="110" y1="110" x2="110" y2="32"
-                            stroke="white" stroke-width="3" stroke-linecap="round"
-                            transform="rotate(-90, 110, 110)"/>
-                        <circle cx="110" cy="110" r="8" fill="white"/>
-                    </svg>
-                    <div class="privacy-score-num" id="privacy-score">72</div>
-                    <div class="privacy-score-lbl">PRIVACY SCORE</div>
-                </div>
-            </div>
-            <div class="privacy-metrics">
-                <div class="metric-card">
-                    <div class="m-label">Data Utility</div>
-                    <div class="m-val" id="m-utility" style="color:var(--gold)">74%</div>
-                </div>
-                <div class="metric-card">
-                    <div class="m-label">Re-identification Risk</div>
-                    <div class="m-val" id="m-risk" style="color:#f87171">0.8%</div>
-                </div>
-                <div class="metric-card">
-                    <div class="m-label">Compliance Status</div>
-                    <div class="m-val" id="m-compliance" style="color:#34d399">GDPR ✓</div>
-                </div>
-            </div>
+  <div class="privacy-inner">
+    <div class="privacy-card reveal">
+      <div class="privacy-top">
+        <div class="privacy-header">
+          <div class="section-label" style="color:rgba(255,255,255,.4)">Husool | Privacy-Safe Synthetic Data Generator</div>
+          <div class="section-title">You Control the Risk Level</div>
+          <p class="section-sub" style="margin-top:13px">Move the slider to balance data utility vs. privacy. Enterprise clients use this to hit compliance targets precisely — before a single contract is signed.</p>
+          <div class="slider-row" style="margin-top:28px">
+            <div class="slider-label"><span>⚡ High Utility</span><span>🔒 High Privacy</span></div>
+            <input type="range" class="privacy-slider" id="privacy-slider" min="0" max="100" value="50">
+          </div>
         </div>
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 220 130">
+            <path class="gauge-track" d="M 20 110 A 90 90 0 0 1 200 110"/>
+            <path class="gauge-fill" id="gauge-fill" d="M 20 110 A 90 90 0 0 1 200 110" stroke-dasharray="283" stroke-dashoffset="141" stroke="#f59e0b"/>
+            <line id="gauge-needle" x1="110" y1="110" x2="110" y2="32" stroke="white" stroke-width="3" stroke-linecap="round" transform="rotate(-90, 110, 110)"/>
+            <circle cx="110" cy="110" r="8" fill="white"/>
+          </svg>
+          <div class="privacy-score-num" id="privacy-score">72</div>
+          <div class="privacy-score-lbl">PRIVACY SCORE</div>
+        </div>
+      </div>
+      <div class="privacy-metrics">
+        <div class="metric-card"><div class="m-label">Data Utility</div><div class="m-val" id="m-utility" style="color:var(--gold)">74%</div></div>
+        <div class="metric-card"><div class="m-label">Re-identification Risk</div><div class="m-val" id="m-risk" style="color:#f87171">0.8%</div></div>
+        <div class="metric-card"><div class="m-label">Compliance Status</div><div class="m-val" id="m-compliance" style="color:#34d399">GDPR ✓</div></div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- ── PRODUCTS ── -->
+<!-- PRODUCTS -->
 <section class="products-section" id="products">
-    <div class="products-inner">
-        <div class="products-header reveal">
-            <div class="section-label">Products</div>
-            <div class="section-title">Five Precision Tools.<br>One Unified Platform.</div>
-        </div>
-        <div class="products-grid">
-            <div class="product-card" id="card-abjadiyah">
-                <div class="product-icon">🤖</div>
-                <h3>Abjadiyah</h3>
-                <p>Machine learning platform designed to simplify the entire AI development lifecycle. Build, deploy, and scale models collaboratively.</p>
-                <ul class="product-features">
-                    <li>Automated model training & tuning</li>
-                    <li>One-click model deployment</li>
-                    <li>Framework-agnostic integration</li>
-                    <li>Real-time performance monitoring</li>
-                </ul>
-                <div class="product-btns">
-                    <button class="btn-sm-primary magnetic">Free Trial</button>
-                    <button class="btn-sm-outline magnetic">Watch Video</button>
-                </div>
-            </div>
-
-            <div class="product-card featured" id="card-husool">
-                <div class="featured-badge">★ FLAGSHIP</div>
-                <div class="product-icon">🛡️</div>
-                <h3>Husool</h3>
-                <p>Generate high-quality synthetic data for banking, healthcare, and ERP — preserving statistical integrity while eliminating privacy risk.</p>
-                <ul class="product-features">
-                    <li>Synthetic data generation at scale</li>
-                    <li>GDPR / HIPAA compliance built-in</li>
-                    <li>Customizable schema mirroring</li>
-                    <li>Differential privacy controls</li>
-                </ul>
-                <div class="product-btns">
-                    <button class="btn-sm-primary magnetic">Free Trial</button>
-                    <button class="btn-sm-outline magnetic">Watch Video</button>
-                </div>
-            </div>
-
-            <div class="product-card" id="card-umlama">
-                <div class="product-icon">💬</div>
-                <h3>UmLama</h3>
-                <p>NLP toolkit for extracting deep insights from unstructured text — from sentiment analysis to document classification at enterprise scale.</p>
-                <ul class="product-features">
-                    <li>Multilingual text tokenization</li>
-                    <li>Sentiment & emotion analysis</li>
-                    <li>Named entity recognition</li>
-                    <li>Document classification API</li>
-                </ul>
-                <div class="product-btns">
-                    <button class="btn-sm-primary magnetic">Free Trial</button>
-                    <button class="btn-sm-outline magnetic">Watch Video</button>
-                </div>
-            </div>
-
-            <div class="product-card" id="card-jusafer">
-                <div class="product-icon">⚡</div>
-                <h3>Jusafer</h3>
-                <p>Big data solution to manage vast structured and unstructured datasets. Real-time streaming with enterprise-grade security and compliance.</p>
-                <ul class="product-features">
-                    <li>Distributed data processing</li>
-                    <li>Real-time streaming pipelines</li>
-                    <li>Enterprise data security</li>
-                    <li>Regulatory compliance layer</li>
-                </ul>
-                <div class="product-btns">
-                    <button class="btn-sm-primary magnetic">Free Trial</button>
-                    <button class="btn-sm-outline magnetic">Watch Video</button>
-                </div>
-            </div>
-
-            <div class="product-card" id="card-manar">
-                <div class="product-icon">📊</div>
-                <h3>Manar</h3>
-                <p>Decision support system for C-suite executives. Real-time analytics and predictive insights delivered as beautiful strategic dashboards.</p>
-                <ul class="product-features">
-                    <li>Executive-grade dashboards</li>
-                    <li>Predictive scenario modeling</li>
-                    <li>Real-time KPI tracking</li>
-                    <li>Board-ready report generation</li>
-                </ul>
-                <div class="product-btns">
-                    <button class="btn-sm-primary magnetic">Free Trial</button>
-                    <button class="btn-sm-outline magnetic">Watch Video</button>
-                </div>
-            </div>
-
-            <div class="product-card" style="background:linear-gradient(135deg,rgba(37,99,235,0.05),rgba(6,182,212,0.05));border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:300px">
-                <div style="font-size:2.5rem;margin-bottom:16px">🔭</div>
-                <h3 style="font-family:'Syne',sans-serif;color:var(--muted)">Coming Soon</h3>
-                <p style="color:var(--muted);font-size:0.85rem;margin-top:8px">The next breakthrough product is in development. Stay tuned.</p>
-                <button class="btn-sm-outline magnetic" style="margin-top:24px">Get Notified</button>
-            </div>
-        </div>
+  <div class="products-inner">
+    <div class="products-header reveal">
+      <div class="section-label">Products</div>
+      <div class="section-title">Five Precision Tools. One Platform.</div>
+      <p class="section-sub">Each product name tells you exactly what it does — no guesswork needed.</p>
     </div>
+    <div class="products-grid">
+      <div class="product-card" id="card-abjadiyah">
+        <div class="product-icon">🤖</div>
+        <div class="product-tagline">ML Platform</div>
+        <h3>Abjadiyah</h3>
+        <div class="product-subtitle">Automated ML Lifecycle Manager</div>
+        <p>From raw dataset to deployed model — no infrastructure expertise required. Build, train, monitor, and retrain ML models in one collaborative workspace.</p>
+        <ul class="product-features">
+          <li>AutoML training & hyperparameter tuning</li>
+          <li>One-click production deployment</li>
+          <li>80+ framework integrations</li>
+          <li>Real-time drift & performance monitoring</li>
+        </ul>
+        <div class="product-walkthrough">
+          <div class="pw-play"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+          <div><div class="pw-text">Watch: Deploy your first model</div><div class="pw-duration">60-second walkthrough</div></div>
+        </div>
+        <div class="product-btns" style="margin-top:12px"><button class="btn-sm-primary magnetic">Free Trial</button><button class="btn-sm-outline magnetic">See Docs</button></div>
+      </div>
+      <div class="product-card featured" id="card-husool">
+        <div class="featured-badge">★ FLAGSHIP PRODUCT</div>
+        <div class="product-icon">🛡️</div>
+        <div class="product-tagline">Synthetic Data</div>
+        <h3>Husool</h3>
+        <div class="product-subtitle">Privacy-Safe Synthetic Data Generator</div>
+        <p>Generate statistically-identical synthetic datasets from any real data source. Zero PII. Full compliance. In hours, not months.</p>
+        <ul class="product-features">
+          <li>Differential privacy controls (adjust live)</li>
+          <li>GDPR / HIPAA / SOC2 compliance built-in</li>
+          <li>Preserves statistical distributions & correlations</li>
+          <li>Supports SQL, CSV, HL7, SWIFT, JSON</li>
+        </ul>
+        <div class="product-walkthrough">
+          <div class="pw-play" style="background:var(--gold)"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+          <div><div class="pw-text">Watch: Generate 1M rows in 90 seconds</div><div class="pw-duration">90-second walkthrough</div></div>
+        </div>
+        <div class="product-btns" style="margin-top:12px"><button class="btn-sm-primary magnetic">Free Trial</button><button class="btn-sm-outline magnetic">Live Demo</button></div>
+      </div>
+      <div class="product-card" id="card-umlama">
+        <div class="product-icon">💬</div>
+        <div class="product-tagline">NLP Engine</div>
+        <h3>UmLama</h3>
+        <div class="product-subtitle">Enterprise NLP & Text Intelligence API</div>
+        <p>Turn unstructured documents, emails, and reports into structured insights. Arabic & English NLP at enterprise throughput.</p>
+        <ul class="product-features">
+          <li>Arabic & English NLP support</li>
+          <li>Sentiment & emotion detection</li>
+          <li>Named entity recognition (NER)</li>
+          <li>Document classification API</li>
+        </ul>
+        <div class="product-walkthrough">
+          <div class="pw-play"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+          <div><div class="pw-text">Watch: Analyze 1,000 docs in real-time</div><div class="pw-duration">75-second walkthrough</div></div>
+        </div>
+        <div class="product-btns" style="margin-top:12px"><button class="btn-sm-primary magnetic">Free Trial</button><button class="btn-sm-outline magnetic">API Docs</button></div>
+      </div>
+      <div class="product-card" id="card-jusafer">
+        <div class="product-icon">⚡</div>
+        <div class="product-tagline">Big Data</div>
+        <h3>Jusafer</h3>
+        <div class="product-subtitle">Real-Time Big Data Streaming Platform</div>
+        <p>Ingest, process, and act on petabyte-scale data in real time. Built for the throughput demands of energy, telecom, and financial services.</p>
+        <ul class="product-features">
+          <li>5TB/s distributed data processing</li>
+          <li>Sub-50ms streaming latency</li>
+          <li>Enterprise security & compliance layer</li>
+          <li>120+ data connector integrations</li>
+        </ul>
+        <div class="product-walkthrough">
+          <div class="pw-play"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+          <div><div class="pw-text">Watch: Live pipeline anomaly detection</div><div class="pw-duration">2-min walkthrough</div></div>
+        </div>
+        <div class="product-btns" style="margin-top:12px"><button class="btn-sm-primary magnetic">Free Trial</button><button class="btn-sm-outline magnetic">Architecture</button></div>
+      </div>
+      <div class="product-card" id="card-manar">
+        <div class="product-icon">📊</div>
+        <div class="product-tagline">Executive BI</div>
+        <h3>Manar</h3>
+        <div class="product-subtitle">1-Click Executive Intelligence Dashboard</div>
+        <p>Give your C-suite real-time answers — not data dumps. Board-ready dashboards, predictions, and strategic recommendations in one view.</p>
+        <ul class="product-features">
+          <li>Board-ready dashboard templates</li>
+          <li>30-day predictive scenario modeling</li>
+          <li>Automated KPI alerts & reports</li>
+          <li>No-SQL query interface for executives</li>
+        </ul>
+        <div class="product-walkthrough">
+          <div class="pw-play"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+          <div><div class="pw-text">Watch: CEO dashboard in 60 seconds</div><div class="pw-duration">60-second walkthrough</div></div>
+        </div>
+        <div class="product-btns" style="margin-top:12px"><button class="btn-sm-primary magnetic">Free Trial</button><button class="btn-sm-outline magnetic">Live Preview</button></div>
+      </div>
+      <div class="product-card" style="background:linear-gradient(135deg,rgba(37,99,235,.04),rgba(6,182,212,.04));border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:280px">
+        <div style="font-size:2.3rem;margin-bottom:14px">🔭</div>
+        <h3 style="font-family:'Syne',sans-serif;color:var(--muted)">Coming 2025</h3>
+        <p style="color:var(--muted);font-size:.8rem;margin-top:7px;max-width:190px">Next breakthrough product in development. 400+ waitlist spots claimed.</p>
+        <button class="btn-sm-outline magnetic" style="margin-top:20px">Join Waitlist</button>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ── PRICING ── -->
+<!-- ROI CALCULATOR -->
+<section class="roi-section" id="roi">
+  <div class="roi-inner">
+    <div style="text-align:center;margin-bottom:44px" class="reveal">
+      <div class="section-label">ROI Calculator</div>
+      <div class="section-title">See Your Numbers Before You Buy</div>
+      <p class="section-sub">Adjust your company profile — see estimated cost savings and time-to-value in real time.</p>
+    </div>
+    <div class="roi-card reveal">
+      <div class="roi-grid">
+        <div class="roi-inputs">
+          <div class="roi-field"><label>Company Size (Employees)</label><input type="range" id="roi-size" min="50" max="10000" value="500" step="50"><div class="range-labels"><span>50</span><span>10,000</span></div><div class="range-val" id="roi-size-val">500 employees</div></div>
+          <div class="roi-field"><label>Monthly Data Volume</label><input type="range" id="roi-data" min="10" max="5000" value="200" step="10"><div class="range-labels"><span>10 GB</span><span>5 TB</span></div><div class="range-val" id="roi-data-val">200 GB/mo</div></div>
+          <div class="roi-field"><label>Compliance Spend ($/mo)</label><input type="range" id="roi-compliance" min="1000" max="100000" value="15000" step="500"><div class="range-labels"><span>$1K</span><span>$100K</span></div><div class="range-val" id="roi-compliance-val">$15,000/mo</div></div>
+          <div class="roi-field"><label>Model Training Cycles/Month</label><input type="range" id="roi-models" min="1" max="50" value="8"><div class="range-labels"><span>1</span><span>50</span></div><div class="range-val" id="roi-models-val">8 cycles/mo</div></div>
+        </div>
+        <div class="roi-results">
+          <h4>YOUR ESTIMATED SAVINGS</h4>
+          <div class="roi-result-row"><span class="r-label">Compliance Cost Reduction</span><span class="r-val" id="roi-r1" style="color:#34d399">$9,000/mo</span></div>
+          <div class="roi-result-row"><span class="r-label">Data Prep Time Saved</span><span class="r-val" id="roi-r2" style="color:#60a5fa">120 hrs/mo</span></div>
+          <div class="roi-result-row"><span class="r-label">Model Training Cost Cut</span><span class="r-val" id="roi-r3" style="color:var(--gold)">$4,800/mo</span></div>
+          <div class="roi-result-row"><span class="r-label">Est. Payback Period</span><span class="r-val" id="roi-r4" style="color:#f472b6">2.4 months</span></div>
+          <div class="roi-total"><div class="t-label">TOTAL ANNUAL SAVINGS</div><div class="t-val" id="roi-total">$166,800</div></div>
+          <button class="btn-audit magnetic" style="width:100%;margin-top:14px;justify-content:center;font-size:.82rem" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">📅 Get Your Personalized ROI Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="compare-section" id="compare">
+  <div class="compare-inner">
+    <div class="compare-header reveal">
+      <div class="section-label">Why Falcon</div>
+      <div class="section-title">Falcon vs. The Alternatives</div>
+      <p class="section-sub">Your buyers are already comparing you to others. Here's the honest breakdown.</p>
+    </div>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th class="falcon-col">Falcon Informatics <span class="compare-badge">LOCAL</span></th>
+            <th>Palantir</th>
+            <th>Traditional ERP BI</th>
+            <th>In-house Build</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Privacy-safe synthetic data generation</td><td class="falcon-col"><span class="check-yes">✓ Native</span></td><td><span class="check-no">✗</span></td><td><span class="check-no">✗</span></td><td><span class="check-partial">Partial</span></td></tr>
+          <tr><td>GDPR + HIPAA compliance built-in</td><td class="falcon-col"><span class="check-yes">✓ All plans</span></td><td><span class="check-partial">Enterprise only</span></td><td><span class="check-partial">Add-on cost</span></td><td><span class="check-no">✗ You build it</span></td></tr>
+          <tr><td>Time to first value</td><td class="falcon-col"><span class="check-yes">✓ Days</span></td><td><span class="check-no">6–18 months</span></td><td><span class="check-no">3–6 months</span></td><td><span class="check-no">12–24 months</span></td></tr>
+          <tr><td>Executive BI with predictive insights</td><td class="falcon-col"><span class="check-yes">✓ Manar</span></td><td><span class="check-yes">✓</span></td><td><span class="check-partial">Dashboards only</span></td><td><span class="check-partial">Custom build</span></td></tr>
+          <tr><td>Arabic NLP support</td><td class="falcon-col"><span class="check-yes">✓ UmLama</span></td><td><span class="check-no">✗</span></td><td><span class="check-no">✗</span></td><td><span class="check-partial">Rare</span></td></tr>
+          <tr><td>Mid-market transparent pricing</td><td class="falcon-col"><span class="check-yes">✓ Transparent</span></td><td><span class="check-no">✗ $M+/yr</span></td><td><span class="check-partial">Mid range</span></td><td><span class="check-no">High hidden cost</span></td></tr>
+          <tr><td>Local Middle East support team</td><td class="falcon-col"><span class="check-yes">✓ 24/7</span></td><td><span class="check-no">✗</span></td><td><span class="check-no">✗</span></td><td><span class="check-no">✗</span></td></tr>
+          <tr><td>Free Data Health Audit</td><td class="falcon-col"><span class="check-yes">✓ Included</span></td><td><span class="check-no">✗</span></td><td><span class="check-no">✗</span></td><td><span class="check-no">✗</span></td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td class="falcon-col"><button class="btn-sm-primary magnetic" onclick="document.getElementById('audit').scrollIntoView({behavior:'smooth'})">Start Free Audit →</button></td>
+            <td><span style="font-size:.76rem;color:var(--muted)">Schedule 6-month onboarding</span></td>
+            <td><span style="font-size:.76rem;color:var(--muted)">Request vendor quote</span></td>
+            <td><span style="font-size:.76rem;color:var(--muted)">Hire a 10-person team</span></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FREE AUDIT & SANDBOX -->
+<section class="audit-section" id="audit">
+  <div class="audit-inner">
+    <div style="text-align:center;margin-bottom:52px" class="reveal">
+      <div class="section-label" style="color:rgba(255,255,255,.4)">No-Risk Entry Points</div>
+      <div class="section-title" style="color:#fff">Try Before You Commit</div>
+      <p class="section-sub" style="color:rgba(255,255,255,.5)">Two ways to experience Falcon with zero risk and zero credit card required.</p>
+    </div>
+    <div class="audit-grid" id="sandbox">
+      <div class="audit-card reveal">
+        <div class="a-icon">🔬</div>
+        <h3>Free Data Health Audit</h3>
+        <p>Upload a sample of your existing data (NDA signed first). Our team identifies data quality issues, compliance risks, and AI-readiness gaps — and delivers a full report in 48 hours. Completely free.</p>
+        <ul class="audit-steps">
+          <li data-n="1">Upload a sample dataset (anonymized OK)</li>
+          <li data-n="2">We run our diagnostic pipeline on it</li>
+          <li data-n="3">You get a 10-page Data Health Report in 48h</li>
+          <li data-n="4">We show you exactly what Falcon can fix</li>
+        </ul>
+        <button class="btn-audit magnetic">Get My Free Audit →</button>
+      </div>
+      <div class="audit-card reveal reveal-delay-1">
+        <div class="a-icon">🎮</div>
+        <h3>Husool Sandbox</h3>
+        <p>No signup required. Paste or upload any sample dataset (up to 1,000 rows) and watch Husool generate a synthetic version in real time. Adjust the privacy slider. Download your output — free, forever.</p>
+        <ul class="audit-steps">
+          <li data-n="1">Paste your CSV or sample table</li>
+          <li data-n="2">Watch Husool synthesize it in under 10 seconds</li>
+          <li data-n="3">Adjust the privacy slider in real time</li>
+          <li data-n="4">Download your synthetic data — free, forever</li>
+        </ul>
+        <button class="btn-sandbox magnetic">Launch Sandbox →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING BAR -->
+<div class="booking-bar" id="booking">
+  <div class="booking-bar-inner">
+    <div class="booking-bar-text">
+      <h4>Talk to a Data Expert — Not a Sales Rep</h4>
+      <p>15-minute discovery call with a Falcon engineer. No pitch, no pressure. Just honest answers to your technical questions.</p>
+    </div>
+    <div class="booking-bar-actions">
+      <button class="btn-book magnetic">📅 Book on Calendly</button>
+      <button class="btn-chat magnetic">💬 Live Chat Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
 <section class="pricing-section" id="pricing">
-    <div class="pricing-inner">
-        <div class="reveal">
-            <div class="section-label">Pricing</div>
-            <div class="section-title">Simple, Honest Pricing</div>
-            <p class="section-sub">Start free, scale when you're ready. No hidden fees.</p>
-        </div>
-        <div class="pricing-grid">
-            <div class="price-card free">
-                <h4>Free Trial</h4>
-                <div style="font-size:0.85rem;color:var(--muted)">Try before you commit</div>
-                <div class="price">$0 <span>/ month</span></div>
-                <ul class="price-list">
-                    <li>Limited dataset retrieval (1GB/mo)</li>
-                    <li>Community support only</li>
-                    <li>Basic model training (5 runs)</li>
-                    <li class="no">Standard compliance only</li>
-                    <li class="no">No real-time streaming</li>
-                    <li class="no">No custom schemas</li>
-                </ul>
-                <button class="btn-price free-btn magnetic">Get Started Free</button>
-            </div>
-            <div class="price-card pro">
-                <h4>Professional</h4>
-                <div style="font-size:0.85rem;color:rgba(255,255,255,0.5)">For serious teams</div>
-                <div class="price" style="color:var(--gold)">Custom <span>/ enterprise</span></div>
-                <ul class="price-list">
-                    <li>Unlimited synthetic data generation</li>
-                    <li>24/7 dedicated support team</li>
-                    <li>Unlimited model training & deployment</li>
-                    <li>Full GDPR / HIPAA / ISO compliance</li>
-                    <li>Real-time predictive insights</li>
-                    <li>Custom schema & API integration</li>
-                </ul>
-                <button class="btn-price pro-btn magnetic">Request a Quote</button>
-            </div>
-        </div>
+  <div class="pricing-inner">
+    <div class="reveal">
+      <div class="section-label">Pricing</div>
+      <div class="section-title">Simple, Honest Pricing</div>
+      <p class="section-sub">Start free, scale when ready. No hidden fees. No 6-month onboarding required.</p>
     </div>
+    <div class="pricing-grid">
+      <div class="price-card free">
+        <h4>Free Trial</h4>
+        <div style="font-size:.82rem;color:var(--muted)">Try before you commit</div>
+        <div class="price">$0 <span>/ month</span></div>
+        <ul class="price-list">
+          <li>Limited dataset retrieval (1GB/mo)</li>
+          <li>Husool Sandbox (1,000 rows)</li>
+          <li>Community support + docs</li>
+          <li>Basic model training (5 runs)</li>
+          <li class="no">No real-time streaming</li>
+          <li class="no">No custom schemas</li>
+          <li class="no">No compliance certifications</li>
+        </ul>
+        <button class="btn-price free-btn magnetic">Start Free — No Card Needed</button>
+      </div>
+      <div class="price-card pro">
+        <h4>Professional</h4>
+        <div style="font-size:.82rem;color:rgba(255,255,255,.5)">For serious enterprise teams</div>
+        <div class="price" style="color:var(--gold)">Custom <span>/ enterprise</span></div>
+        <ul class="price-list">
+          <li>Unlimited synthetic data generation</li>
+          <li>Full GDPR / HIPAA / ISO 27001</li>
+          <li>24/7 dedicated engineering support</li>
+          <li>Real-time predictive insights (Manar)</li>
+          <li>Custom schema & API integration</li>
+          <li>SLA-backed uptime guarantee</li>
+          <li>Free Data Health Audit included</li>
+        </ul>
+        <button class="btn-price pro-btn magnetic">Request a Quote →</button>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ── PARTNERS ── -->
+<!-- PARTNERS -->
 <section class="partners-section" id="partners">
-    <div class="partners-inner">
-        <div class="reveal">
-            <div class="section-label">Partners</div>
-            <div class="section-title">Building Innovation Together</div>
-            <p class="section-sub">"Partnerships at Falcon Informatics aren't just agreements — they're engines of shared success."</p>
-        </div>
-        <div class="partner-types">
-            <div class="partner-type reveal reveal-delay-1">
-                <div class="p-icon">💻</div>
-                <h5>Technology</h5>
-            </div>
-            <div class="partner-type reveal reveal-delay-2">
-                <div class="p-icon">🎓</div>
-                <h5>Research & Academia</h5>
-            </div>
-            <div class="partner-type reveal reveal-delay-1">
-                <div class="p-icon">🤝</div>
-                <h5>Consulting & Services</h5>
-            </div>
-            <div class="partner-type reveal reveal-delay-2">
-                <div class="p-icon">📦</div>
-                <h5>Channel & Reseller</h5>
-            </div>
-        </div>
+  <div class="partners-inner">
+    <div class="reveal">
+      <div class="section-label">Partners</div>
+      <div class="section-title">Building Innovation Together</div>
+      <p class="section-sub" style="font-style:italic">"Partnerships at Falcon Informatics aren't just agreements — they're engines of shared success."</p>
     </div>
+    <div class="partner-types">
+      <div class="partner-type reveal reveal-delay-1"><div class="p-icon">💻</div><h5>Technology</h5></div>
+      <div class="partner-type reveal reveal-delay-2"><div class="p-icon">🎓</div><h5>Research & Academia</h5></div>
+      <div class="partner-type reveal reveal-delay-1"><div class="p-icon">🤝</div><h5>Consulting & Services</h5></div>
+      <div class="partner-type reveal reveal-delay-2"><div class="p-icon">📦</div><h5>Channel & Reseller</h5></div>
+    </div>
+  </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer>
-    <div class="footer-inner">
-        <div class="footer-top">
-            <div>
-                <div class="footer-brand">Falcon <span>Informatics</span></div>
-                <p class="footer-desc">A team of visionaries pushing the boundaries of data science to create real-world change — across every industry that matters.</p>
-            </div>
-            <div class="footer-col">
-                <h6>Products</h6>
-                <a href="#">Abjadiyah</a>
-                <a href="#">Husool</a>
-                <a href="#">UmLama</a>
-                <a href="#">Jusafer</a>
-                <a href="#">Manar</a>
-            </div>
-            <div class="footer-col">
-                <h6>Company</h6>
-                <a href="#">About Us</a>
-                <a href="#">Careers</a>
-                <a href="#">Research</a>
-                <a href="#">Press</a>
-                <a href="#">Blog</a>
-            </div>
-            <div class="footer-col">
-                <h6>Legal</h6>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">GDPR</a>
-                <a href="#">Security</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <span>© 2025 Falcon Informatics. All rights reserved.</span>
-            <span>Turning data into intelligence.</span>
-        </div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Falcon <span>Informatics</span></div>
+        <p class="footer-desc">Founded 2023. A team of data science visionaries building privacy-safe AI infrastructure for Banking, Healthcare, and Energy across the Middle East and beyond.</p>
+      </div>
+      <div class="footer-col">
+        <h6>Products</h6>
+        <a href="#">Abjadiyah — AutoML</a>
+        <a href="#">Husool — Synthetic Data</a>
+        <a href="#">UmLama — NLP</a>
+        <a href="#">Jusafer — Big Data</a>
+        <a href="#">Manar — Executive BI</a>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <a href="#">About Us</a>
+        <a href="#">Leadership Team</a>
+        <a href="#">Case Studies</a>
+        <a href="#">Research Papers</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <h6>Get Started</h6>
+        <a href="#">Free Data Audit</a>
+        <a href="#">Husool Sandbox</a>
+        <a href="#">Book Discovery Call</a>
+        <a href="#">Request a Quote</a>
+        <a href="#">Security & Compliance</a>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <span>© 2025 Falcon Informatics. All rights reserved.</span>
+      <span>Turning data into intelligence — responsibly.</span>
+    </div>
+  </div>
 </footer>
 
-<!-- ── CHATBOT BAR ── -->
+<!-- CHATBOT BAR -->
 <div class="chatbot-bar">
-    <div class="chat-input-row">
-        <div class="chat-avatar">
-            <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        </div>
-        <input type="text" id="ai-input" placeholder="Ask anything about Falcon Informatics…">
-        <button class="chat-send magnetic">
-            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-        </button>
-    </div>
-    <div class="chat-pills">
-        <button class="chat-pill" onclick="fillInput(this)">I have specific questions</button>
-        <button class="chat-pill" onclick="fillInput(this)">I'd like a product demo</button>
-        <button class="chat-pill" onclick="fillInput(this)">Support for existing customer</button>
-        <button class="chat-pill" onclick="fillInput(this)">Compare Free vs Pro</button>
-        <button class="chat-pill" onclick="fillInput(this)">How does Husool work?</button>
-    </div>
+  <div class="chat-input-row">
+    <div class="chat-avatar"><svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+    <input type="text" id="ai-input" placeholder="Ask anything — pricing, demos, compliance, integrations…">
+    <button class="chat-send magnetic"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
+  </div>
+  <div class="chat-pills">
+    <button class="chat-pill" onclick="fillInput(this)">How does Husool work?</button>
+    <button class="chat-pill" onclick="fillInput(this)">Compare Free vs Pro</button>
+    <button class="chat-pill" onclick="fillInput(this)">I want a product demo</button>
+    <button class="chat-pill" onclick="fillInput(this)">Free Data Audit — how?</button>
+    <button class="chat-pill" onclick="fillInput(this)">Talk to a human expert</button>
+  </div>
 </div>
 
 <script>
-/* ── CUSTOM CURSOR ── */
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
-function animateRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animateRing); }
+/* CURSOR */
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animateRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing)}
 animateRing();
-document.querySelectorAll('button, a, input, .ind-tab, .step-item, .ba-divider').forEach(el => {
-    el.addEventListener('mouseenter', () => { ring.style.width='52px'; ring.style.height='52px'; ring.style.borderColor='rgba(37,99,235,0.7)'; });
-    el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='rgba(37,99,235,0.4)'; });
+document.querySelectorAll('button,a,input,.ind-tab,.step-item,.ba-divider,.product-card,.testi-card,.case-card,.leader-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(37,99,235,.7)'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(37,99,235,.4)'});
 });
 
-/* ── TYPED HERO ── */
-const words = ['Banking Data.', 'Healthcare Data.', 'ERP Systems.', 'Synthetic Data.', 'Your Industry.'];
-let wi = 0, ci = 0, deleting = false;
-function type() {
-    const word = words[wi];
-    const el = document.getElementById('typed');
-    if (!deleting) { el.textContent = word.slice(0, ++ci); if (ci === word.length) { deleting = true; setTimeout(type, 1800); return; } }
-    else { el.textContent = word.slice(0, --ci); if (ci === 0) { deleting = false; wi = (wi+1) % words.length; } }
-    setTimeout(type, deleting ? 50 : 80);
+/* TYPED */
+const words=['Banking Data.','Healthcare Records.','ERP Systems.','Synthetic Data.','Your Industry.'];
+let wi=0,ci=0,del=false;
+function type(){
+  const word=words[wi],el=document.getElementById('typed');
+  if(!del){el.textContent=word.slice(0,++ci);if(ci===word.length){del=true;setTimeout(type,1800);return}}
+  else{el.textContent=word.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length}}
+  setTimeout(type,del?50:80);
 }
 type();
 
-/* ── BEFORE & AFTER SLIDER ── */
-const baContainer = document.getElementById('ba-container');
-const baDivider = document.getElementById('ba-divider');
-const baLeft = document.getElementById('ba-left');
-let dragging = false;
-function setSlider(pct) {
-    baDivider.style.left = pct + '%';
-    baLeft.style.width = pct + '%';
-}
+/* BEFORE/AFTER */
+const baC=document.getElementById('ba-container'),baD=document.getElementById('ba-divider'),baL=document.getElementById('ba-left');
+let drag=false;
+function setSlider(p){baD.style.left=p+'%';baL.style.width=p+'%'}
 setSlider(50);
-baDivider.addEventListener('mousedown', () => dragging = true);
-document.addEventListener('mouseup', () => dragging = false);
-document.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const rect = baContainer.getBoundingClientRect();
-    let pct = ((e.clientX - rect.left) / rect.width) * 100;
-    pct = Math.max(5, Math.min(95, pct));
-    setSlider(pct);
-});
-baDivider.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); }, {passive:false});
-document.addEventListener('touchend', () => dragging = false);
-document.addEventListener('touchmove', e => {
-    if (!dragging) return;
-    const rect = baContainer.getBoundingClientRect();
-    let pct = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
-    pct = Math.max(5, Math.min(95, pct));
-    setSlider(pct);
-}, {passive:false});
+baD.addEventListener('mousedown',()=>drag=true);
+document.addEventListener('mouseup',()=>drag=false);
+document.addEventListener('mousemove',e=>{if(!drag)return;const r=baC.getBoundingClientRect();setSlider(Math.max(5,Math.min(95,((e.clientX-r.left)/r.width)*100)))});
+baD.addEventListener('touchstart',e=>{drag=true;e.preventDefault()},{passive:false});
+document.addEventListener('touchend',()=>drag=false);
+document.addEventListener('touchmove',e=>{if(!drag)return;const r=baC.getBoundingClientRect();setSlider(Math.max(5,Math.min(95,((e.touches[0].clientX-r.left)/r.width)*100)))},{passive:false});
 
-/* ── INDUSTRY SWITCHER ── */
-document.querySelectorAll('.ind-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.ind-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.industry-content').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('ind-' + tab.dataset.ind).classList.add('active');
-    });
+/* INDUSTRY */
+document.querySelectorAll('.ind-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.ind-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.industry-content').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('ind-'+tab.dataset.ind).classList.add('active');
+  });
 });
 
-/* ── STEPPER ── */
-let currentStep = 0;
-const stepData = [
-    { title: 'Step 1: Connect', body: 'Integrate any data source in minutes — SQL databases, cloud storage, REST APIs, or flat files. Falcon\'s universal connectors speak every data dialect. Your data never leaves your infrastructure.' },
-    { title: 'Step 2: Analyze', body: 'Falcon\'s AI engine automatically maps your schema, detects data types, identifies sensitive fields, and computes statistical distributions. No manual labeling required. Results in under 60 seconds.' },
-    { title: 'Step 3: Synthesize', body: 'Husool generates statistically identical synthetic data that mirrors your real dataset\'s structure, distributions, and correlations — with zero personally identifiable information. Full GDPR compliance by design.' },
-    { title: 'Step 4: Deploy', body: 'Ship your trained AI models to production via REST API or our CI/CD pipeline integrations. Monitor performance in real-time with Manar dashboards. Scale to millions of records instantly.' }
+/* STEPPER */
+let cs=0;
+const sd=[
+  {title:'Step 1: Connect',body:"Integrate any data source in minutes — SQL databases, cloud storage, REST APIs, or flat files. Falcon's universal connectors support 80+ data dialects. Your data never leaves your infrastructure."},
+  {title:'Step 2: Analyze',body:"Falcon's AI engine automatically maps your schema, detects data types, identifies sensitive fields, and computes statistical distributions. No manual labeling required. Results in under 60 seconds."},
+  {title:'Step 3: Synthesize',body:"Husool generates statistically identical synthetic data that mirrors your real dataset's structure, distributions, and correlations — with zero PII. Full GDPR compliance by design."},
+  {title:'Step 4: Deploy',body:"Ship your trained AI models to production via REST API or our CI/CD pipeline integrations. Monitor performance in real-time with Manar dashboards. Scale to millions of records instantly."}
 ];
-function changeStep(dir) {
-    const items = document.querySelectorAll('.step-item');
-    currentStep = Math.max(0, Math.min(3, currentStep + dir));
-    items.forEach((item, i) => {
-        item.classList.remove('active', 'done');
-        if (i < currentStep) item.classList.add('done');
-        if (i === currentStep) item.classList.add('active');
-    });
-    document.getElementById('step-detail-title').textContent = stepData[currentStep].title;
-    document.getElementById('step-detail-body').textContent = stepData[currentStep].body;
-    document.getElementById('steps-progress').style.width = (currentStep / 3 * 80) + '%';
-    document.getElementById('step-prev').disabled = currentStep === 0;
-    document.getElementById('step-next').disabled = currentStep === 3;
-    document.getElementById('step-next').textContent = currentStep === 3 ? '✓ Complete' : 'Next Step →';
+function changeStep(dir){
+  const items=document.querySelectorAll('.step-item');
+  cs=Math.max(0,Math.min(3,cs+dir));
+  items.forEach((item,i)=>{item.classList.remove('active','done');if(i<cs)item.classList.add('done');if(i===cs)item.classList.add('active')});
+  document.getElementById('step-detail-title').textContent=sd[cs].title;
+  document.getElementById('step-detail-body').textContent=sd[cs].body;
+  document.getElementById('steps-progress').style.width=(cs/3*80)+'%';
+  document.getElementById('step-prev').disabled=cs===0;
+  document.getElementById('step-next').disabled=cs===3;
+  document.getElementById('step-next').textContent=cs===3?'✓ All Steps Complete':'Next Step →';
 }
-document.querySelectorAll('.step-item').forEach(item => {
-    item.addEventListener('click', () => {
-        const s = parseInt(item.dataset.step);
-        changeStep(s - currentStep);
-    });
-});
+document.querySelectorAll('.step-item').forEach(item=>{item.addEventListener('click',()=>changeStep(parseInt(item.dataset.step)-cs))});
 changeStep(0);
 
-/* ── PRIVACY SLIDER ── */
-const privSlider = document.getElementById('privacy-slider');
-const gaugeFill = document.getElementById('gauge-fill');
-const gaugeNeedle = document.getElementById('gauge-needle');
-function updatePrivacy(val) {
-    const score = Math.round(20 + val * 0.78);
-    const utility = Math.round(95 - val * 0.45);
-    const risk = (5 - val * 0.048).toFixed(1);
-    document.getElementById('privacy-score').textContent = score;
-    document.getElementById('m-utility').textContent = utility + '%';
-    document.getElementById('m-risk').textContent = Math.max(0.1, risk) + '%';
-    document.getElementById('m-compliance').textContent = score >= 60 ? 'GDPR ✓' : score >= 40 ? 'Partial ⚠' : 'Review ✗';
-    document.getElementById('m-compliance').style.color = score >= 60 ? '#34d399' : score >= 40 ? var_gold : '#f87171';
-    const totalArc = 283;
-    const offset = totalArc - (score / 100) * totalArc;
-    gaugeFill.setAttribute('stroke-dashoffset', offset);
-    const hue = score < 50 ? `#f59e0b` : score < 75 ? `#3b82f6` : `#34d399`;
-    gaugeFill.setAttribute('stroke', hue);
-    const angle = -90 + (score / 100) * 180;
-    gaugeNeedle.setAttribute('transform', `rotate(${angle}, 110, 110)`);
-    privSlider.style.background = `linear-gradient(to right, #f59e0b ${val}%, #34d399 ${val}%)`;
+/* PRIVACY */
+const ps=document.getElementById('privacy-slider'),gf=document.getElementById('gauge-fill'),gn=document.getElementById('gauge-needle');
+function updatePrivacy(val){
+  const score=Math.round(20+val*.78),utility=Math.round(95-val*.45),risk=Math.max(0.1,5-val*.048).toFixed(1);
+  document.getElementById('privacy-score').textContent=score;
+  document.getElementById('m-utility').textContent=utility+'%';
+  document.getElementById('m-risk').textContent=risk+'%';
+  const comp=score>=60?'GDPR ✓':score>=40?'Partial ⚠':'Review ✗';
+  document.getElementById('m-compliance').textContent=comp;
+  document.getElementById('m-compliance').style.color=score>=60?'#34d399':score>=40?'#f59e0b':'#f87171';
+  gf.setAttribute('stroke-dashoffset',283-(score/100)*283);
+  gf.setAttribute('stroke',score<50?'#f59e0b':score<75?'#3b82f6':'#34d399');
+  gn.setAttribute('transform',`rotate(${-90+(score/100)*180}, 110, 110)`);
+  ps.style.background=`linear-gradient(to right,#f59e0b ${val}%,#34d399 ${val}%)`;
 }
-const var_gold = '#f59e0b';
-privSlider.addEventListener('input', e => updatePrivacy(parseInt(e.target.value)));
+ps.addEventListener('input',e=>updatePrivacy(parseInt(e.target.value)));
 updatePrivacy(50);
 
-/* ── 3D CARD TILT ── */
-document.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const cx = rect.width / 2;
-        const cy = rect.height / 2;
-        const rx = ((y - cy) / cy) * -8;
-        const ry = ((x - cx) / cx) * 8;
-        card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
-    });
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
-    });
-});
-
-/* ── MAGNETIC BUTTONS ── */
-document.querySelectorAll('.magnetic').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-        const rect = btn.getBoundingClientRect();
-        const dx = e.clientX - (rect.left + rect.width/2);
-        const dy = e.clientY - (rect.top + rect.height/2);
-        btn.style.transform = `translate(${dx*0.22}px, ${dy*0.22}px)`;
-    });
-    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
-});
-
-/* ── SCROLL REVEAL ── */
-const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.12 });
-reveals.forEach(r => io.observe(r));
-
-/* ── CHAT BAR ── */
-function fillInput(btn) {
-    document.getElementById('ai-input').value = btn.innerText;
-    document.getElementById('ai-input').focus();
+/* ROI */
+function updateROI(){
+  const size=parseInt(document.getElementById('roi-size').value);
+  const data=parseInt(document.getElementById('roi-data').value);
+  const comp=parseInt(document.getElementById('roi-compliance').value);
+  const models=parseInt(document.getElementById('roi-models').value);
+  document.getElementById('roi-size-val').textContent=size.toLocaleString()+' employees';
+  document.getElementById('roi-data-val').textContent=data>=1000?(data/1000).toFixed(1)+' TB/mo':data+' GB/mo';
+  document.getElementById('roi-compliance-val').textContent='$'+comp.toLocaleString()+'/mo';
+  document.getElementById('roi-models-val').textContent=models+' cycles/mo';
+  const cSave=Math.round(comp*.6),tSave=Math.round(data*.6+models*5),mSave=Math.round(models*600);
+  const total=cSave+mSave+Math.round(tSave*85);
+  const payback=Math.max(0.5,(total*12/total)*.2).toFixed(1);
+  document.getElementById('roi-r1').textContent='$'+cSave.toLocaleString()+'/mo';
+  document.getElementById('roi-r2').textContent=tSave+' hrs/mo';
+  document.getElementById('roi-r3').textContent='$'+mSave.toLocaleString()+'/mo';
+  document.getElementById('roi-r4').textContent=payback+' months';
+  document.getElementById('roi-total').textContent='$'+(total*12).toLocaleString();
 }
+['roi-size','roi-data','roi-compliance','roi-models'].forEach(id=>document.getElementById(id).addEventListener('input',updateROI));
+updateROI();
+
+/* 3D TILT */
+document.querySelectorAll('.product-card,.testi-card,.case-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.transform=`perspective(800px) rotateX(${((e.clientY-(r.top+r.height/2))/r.height)*-8}deg) rotateY(${((e.clientX-(r.left+r.width/2))/r.width)*8}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave',()=>card.style.transform='perspective(800px) rotateX(0) rotateY(0) translateY(0)');
+});
+
+/* MAGNETIC */
+document.querySelectorAll('.magnetic').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();btn.style.transform=`translate(${(e.clientX-(r.left+r.width/2))*.22}px,${(e.clientY-(r.top+r.height/2))*.22}px)`});
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
+});
+
+/* SCROLL REVEAL */
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>io.observe(r));
+
+/* CHAT */
+function fillInput(btn){document.getElementById('ai-input').value=btn.innerText;document.getElementById('ai-input').focus()}
 </script>
 </body>
 </html>
